@@ -4,6 +4,7 @@
   "description": "Typescript/Javascript library for creating Storyplaces schema",
   "main": "main.js",
   "scripts": {
+    "dev": "node dist/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Callum Spawforth (cs14g13@soton.ac.uk)",
