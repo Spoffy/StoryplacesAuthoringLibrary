@@ -1,78 +1,126 @@
 import {VariableReference} from "./VariableReference";
-import {LocationRef} from "./Location";
+import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
+import {
+    ComparisonOperand,
+    ComparisonType,
+    ConditionCheckSchema,
+    ConditionComparisonSchema, ConditionIsRoleSchema,
+    ConditionLocationSchema,
+    ConditionLogicalSchema,
+    ConditionRefSchema,
+    ConditionSchema,
+    ConditionTimePassedSchema, ConditionTimeRangeSchema,
+    LogicalOperand
+} from "../schema/ConditionSchema";
+import {LocationRefSchema} from "../schema/LocationSchema";
 
-export class StoryConditionBase {
+export abstract class StoryConditionBase implements SchemaContentBuilder<ConditionSchema> {
     id: string;
-}
 
-export enum LogicalOperand {
-    AND,
-    OR,
-    NOR,
-    NAND
+    abstract buildContent(): ConditionSchema;
 }
 
 export class StoryConditionLogical extends StoryConditionBase {
-    type: "logical";
     operand: LogicalOperand;
-    conditions: [StoryConditionRef];
-}
+    conditions: ConditionRefSchema[];
 
-export enum ComparisonOperand {
-    "==",
-    "!=",
-    "<=",
-    ">=",
-    "<",
-    ">"
-}
-
-export enum ComparisonType {
-    Variable,
-    Integer,
-    String
+    buildContent(): ConditionLogicalSchema {
+        return {
+            id: this.id,
+            type: "logical",
+            operand: this.operand,
+            conditions: this.conditions
+        }
+    }
 }
 
 export class StoryConditionComparison extends StoryConditionBase {
-    type: "comparison";
     operand: ComparisonOperand;
     a: VariableReference;
     b: VariableReference;
     aType: ComparisonType;
     bType: ComparisonType;
+
+    buildContent(): ConditionComparisonSchema {
+        return {
+            id: this.id,
+            type: "comparison",
+            operand: this.operand,
+            a: this.a.buildContent(),
+            b: this.b.buildContent(),
+            aType: this.aType,
+            bType: this.bType
+        }
+    }
 }
 
 export class StoryConditionCheck extends StoryConditionBase {
-    type: "check";
     variable: VariableReference;
+
+    buildContent(): ConditionCheckSchema {
+        return {
+            id: this.id,
+            type: "check",
+            variable: this.variable.buildContent()
+        }
+    }
 }
 
 export class StoryConditionLocation extends StoryConditionBase {
-    type: "location";
     bool: boolean;
-    location: LocationRef;
+    location: LocationRefSchema;
+
+    buildContent(): ConditionLocationSchema {
+        return {
+            id: this.id,
+            type: "location",
+            bool: this.bool,
+            location: this.location
+        }
+    }
 }
 
 
 export class StoryConditionTimePassed extends StoryConditionBase {
-    type: "timepassed";
     minutes: number;
     variable: VariableReference;
+
+    buildContent(): ConditionTimePassedSchema {
+        return {
+            id: this.id,
+            type: "timepassed",
+            minutes: this.minutes,
+            variable: this.variable.buildContent()
+        }
+    }
 }
 
 export class StoryConditionTimeRange extends StoryConditionBase {
-    type: "timerange";
     first: string;
     last: string;
+
+    buildContent(): ConditionTimeRangeSchema {
+        return {
+            id: this.id,
+            type: "timerange",
+            first: this.first,
+            last: this.last
+        }
+    }
 }
 
 export class StoryConditionIsRole extends StoryConditionBase {
-    type: "isrole";
     role: string;
+
+    buildContent(): ConditionIsRoleSchema {
+        return {
+            id: this.id,
+            type: "isrole",
+            role: this.role
+        }
+    }
 }
 
 export type StoryCondition = StoryConditionCheck | StoryConditionComparison | StoryConditionIsRole
                            | StoryConditionTimePassed | StoryConditionTimeRange | StoryConditionLogical
                            | StoryConditionLocation;
-
-export type StoryConditionRef = string;

@@ -1,40 +1,95 @@
 import {VariableReference} from "./VariableReference";
-import {StoryConditionRef} from "./StoryCondition";
+import {
+    FunctionChainSchema,
+    FunctionIncrementSchema, FunctionRefSchema,
+    FunctionSchema,
+    FunctionSetRoleSchema,
+    FunctionSetSchema,
+    FunctionSetTimestampSchema
+} from "../schema/FunctionSchema";
+import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
+import {ConditionRefSchema} from "../schema/ConditionSchema";
 
-export class StoryFunctionBase {
+export abstract class StoryFunctionBase implements SchemaContentBuilder<FunctionSchema> {
     id: string;
-    conditions: [StoryConditionRef];
-    functions?: [StoryFunctionRef]; //Unique
+    conditions: ConditionRefSchema[] = [];
+    functions: FunctionRefSchema[] = []; //Unique
+
+    abstract buildContent(): FunctionSchema;
 }
 
 export class StoryFunctionSet extends StoryFunctionBase {
     type: "set";
     variable: VariableReference;
     value: string;
+
+    buildContent(): FunctionSetSchema {
+        return {
+            id: this.id,
+            conditions: this.conditions,
+            functions: this.functions,
+            type: "set",
+            variable: this.variable.buildContent(),
+            value: this.value
+        }
+    }
 }
 
 export class StoryFunctionSetRole extends StoryFunctionBase {
-    type: "setrole";
     value: string;
+
+    buildContent(): FunctionSetRoleSchema {
+        return {
+            id: this.id,
+            conditions: this.conditions,
+            functions: this.functions,
+            type: "setrole",
+            value: this.value
+        }
+    }
 }
 
 export class StoryFunctionSetTimestamp extends StoryFunctionBase {
-    type: "settimestamp";
     variable: VariableReference;
+
+    buildContent(): FunctionSetTimestampSchema {
+        return {
+            id: this.id,
+            conditions: this.conditions,
+            functions: this.functions,
+            type: "settimestamp",
+            variable: this.variable.buildContent()
+        }
+    }
 }
 
 export class StoryFunctionIncrement extends StoryFunctionBase {
-    type: "increment";
     variable: VariableReference;
     value: string;
+
+    buildContent(): FunctionIncrementSchema {
+        return {
+            id: this.id,
+            conditions: this.conditions,
+            functions: this.functions,
+            type: "increment",
+            variable: this.variable.buildContent(),
+            value: this.value
+        }
+    }
 }
 
 export class StoryFunctionChain extends StoryFunctionBase {
-    type: "chain";
     //Functions is non-optional here.
+    buildContent(): FunctionChainSchema {
+        return {
+            id: this.id,
+            conditions: this.conditions,
+            functions: this.functions,
+            type: "chain"
+        }
+    }
 }
 
 export type StoryFunction = StoryFunctionSet | StoryFunctionSetRole | StoryFunctionSetTimestamp
                           | StoryFunctionIncrement | StoryFunctionChain;
-
-export type StoryFunctionRef = string;
