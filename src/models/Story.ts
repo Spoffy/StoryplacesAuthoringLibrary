@@ -16,7 +16,7 @@ export class Story implements SchemaContentBuilder<StorySchema> {
     public publishState: PublishState;
     public roles: Role[] = [];
     public pages: Page[] = []; //Unique
-    public content: { [index: string]: string };
+    public content: { [index: string]: string } = {};
     public functions: StoryFunction[] = []; //Unique
     public conditions: StoryCondition[] = []; //Unique
     public cachedMediaIds: string[] = []; //Unique
