@@ -2,8 +2,10 @@ import {PageHint} from "./PageHint";
 import {PageTransition} from "../schema/PageTransition";
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
 import {PageSchema} from "../schema/PageSchema";
-import {StoryFunctionReferenceOrDefinition, ToStoryFunctionReference} from "./StoryFunction";
-import {ConditionReferenceOrDefinition, ToConditionReference} from "./StoryCondition";
+import {StoryFunctionReferenceOrDefinition, StoryFunctionSet, ToStoryFunctionReference} from "./StoryFunction";
+import {ConditionReferenceOrDefinition, StoryConditionComparison, ToConditionReference} from "./StoryCondition";
+import {VariableReference} from "./VariableReference";
+import {ComparisonOperand, ComparisonType} from "../schema/ConditionSchema";
 
 
 type PageCreationParameters = {
@@ -13,7 +15,8 @@ type PageCreationParameters = {
 
     functions?: StoryFunctionReferenceOrDefinition[],
     conditions?: ConditionReferenceOrDefinition[],
-    pageTransition?: PageTransition
+    pageTransition?: PageTransition,
+    singleVisit?: boolean
 }
 
 export class Page implements SchemaContentBuilder<PageSchema> {
@@ -25,13 +28,29 @@ export class Page implements SchemaContentBuilder<PageSchema> {
     public conditions: ConditionReferenceOrDefinition[] = [];
     public pageTransition: PageTransition = PageTransition.next;
 
-    constructor({name, contentRef, hint, functions, conditions, pageTransition}: PageCreationParameters) {
+    constructor({name, contentRef, hint, functions, conditions, pageTransition, singleVisit}: PageCreationParameters) {
         this.name = name;
         this.contentRef = contentRef;
         this.hint = hint;
         this.functions = functions || [];
         this.conditions = conditions || [];
         this.pageTransition = pageTransition || PageTransition.next;
+
+        if(singleVisit) {
+            this.makeSingleVisit();
+        }
+    }
+
+    private makeSingleVisit() {
+        let name = this.name + " VisitGuard";
+        let varRef = VariableReference.FromVariableName(name)
+        this.functions.push(new StoryFunctionSet(name, varRef, "true"))
+        this.conditions.push(new StoryConditionComparison(
+            name, ComparisonOperand.NOT_EQUAL,
+            varRef,
+            "true",
+            ComparisonType.Variable,
+            ComparisonType.String));
     }
 
     buildContent(): PageSchema {
@@ -45,5 +64,4 @@ export class Page implements SchemaContentBuilder<PageSchema> {
             conditions: this.conditions.map(ToConditionReference)
         }
     }
-
 }
