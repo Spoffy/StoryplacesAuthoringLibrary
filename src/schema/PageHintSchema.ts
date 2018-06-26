@@ -1,4 +1,4 @@
-export interface PageHint {
+export interface PageHintSchema {
   direction: string;
   locations: [string];
 }

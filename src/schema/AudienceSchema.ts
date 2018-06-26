@@ -1,4 +1,4 @@
-export enum Audience {
+export enum AudienceSchema {
   family,
   general,
   advisory

@@ -1,4 +1,4 @@
-export enum PublishState {
+export enum PublishStateSchema {
   published,
   draft,
   review,

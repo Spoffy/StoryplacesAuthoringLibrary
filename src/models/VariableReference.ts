@@ -1,11 +1,7 @@
-import {VariableScope} from "../schema/VariableScopes";
+import {VariableScopeSchema} from "../schema/VariableScopes";
 
-export type ImplicitVariableReference = string;
-
-export class ExplicitVariableReference {
-  scope: VariableScope;
+export class VariableReference {
+  scope: VariableScopeSchema;
   namespace: string;
   variable: string;
 }
-
-export type VariableReference = ImplicitVariableReference | ExplicitVariableReference;

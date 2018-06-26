@@ -1,4 +1,4 @@
-export enum VariableScope {
+export enum VariableScopeSchema {
   global,
   shared
 }

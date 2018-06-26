@@ -4,13 +4,13 @@ import {Location} from "./Location";
 import {StoryFunction} from "./StoryFunction";
 import {StoryCondition} from "./StoryCondition";
 import {MapViewSettings} from "./MapViewSettings";
-import {PublishState} from "../schema/PublishState";
-import {Audience} from "../schema/Audience";
+import {PublishStateSchema} from "../schema/PublishStateSchema";
+import {AudienceSchema} from "../schema/AudienceSchema";
 
 export class Story {
   name: string;
   author: string;
-  publishState: PublishState;
+  publishState: PublishStateSchema;
   publishDate?: string;
   roles: [Role];
   pages: [Page]; //Unique
@@ -22,5 +22,5 @@ export class Story {
   tags: [string]; //Unique
   pagesMapViewSettings?: MapViewSettings;
   schemaVersion: string;
-  audience: Audience;
+  audience: AudienceSchema;
 }
