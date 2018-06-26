@@ -6,16 +6,17 @@ import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
 import {PageSchema} from "../schema/PageSchema";
 
 export class Page implements  SchemaContentBuilder<PageSchema> {
-    name: string;
-    contentRef: string;
+    constructor(
+        public name: string,
+        public contentRef: string,
 
-    //Unsupported
-    //messageToObservers?: string;
+        //Unsupported
+        //messageToObservers?: string,
 
-    pageTransition: PageTransitionSchema;
-    hint: PageHint;
-    functions: FunctionRefSchema[];
-    conditions: ConditionRefSchema[];
+        public pageTransition: PageTransitionSchema,
+        public hint: PageHint,
+        public functions: FunctionRefSchema[],
+        public conditions: ConditionRefSchema[]) {}
 
     buildContent(): PageSchema {
         return {

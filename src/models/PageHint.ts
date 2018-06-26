@@ -2,8 +2,9 @@ import {PageHintSchema} from "../schema/PageHintSchema";
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
 
 export class PageHint implements SchemaContentBuilder<PageHintSchema> {
-    direction: string;
-    locations: [string];
+    constructor(
+        public direction: string,
+        public locations: [string]) {}
 
     buildContent(): PageHintSchema {
         return {

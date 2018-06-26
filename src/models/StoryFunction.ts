@@ -11,17 +11,25 @@ import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
 import {ConditionRefSchema} from "../schema/ConditionSchema";
 
 export abstract class StoryFunctionBase implements SchemaContentBuilder<FunctionSchema> {
-    id: string;
-    conditions: ConditionRefSchema[] = [];
-    functions: FunctionRefSchema[] = []; //Unique
+    constructor(
+        public id: string,
+        public conditions: ConditionRefSchema[] = [],
+        public functions: FunctionRefSchema[] = []) {}
 
     abstract buildContent(): FunctionSchema;
 }
 
 export class StoryFunctionSet extends StoryFunctionBase {
-    type: "set";
-    variable: VariableReference;
-    value: string;
+    constructor(
+        id: string,
+        public variable: VariableReference,
+        public value: string,
+        conditions?: ConditionRefSchema[],
+        functions?: FunctionRefSchema[])
+    {
+        super(id, conditions, functions);
+    }
+
 
     buildContent(): FunctionSetSchema {
         return {
@@ -36,7 +44,14 @@ export class StoryFunctionSet extends StoryFunctionBase {
 }
 
 export class StoryFunctionSetRole extends StoryFunctionBase {
-    value: string;
+    constructor(
+        id: string,
+        public value: string,
+        conditions?: ConditionRefSchema[],
+        functions?: FunctionRefSchema[])
+    {
+        super(id, conditions, functions);
+    }
 
     buildContent(): FunctionSetRoleSchema {
         return {
@@ -50,7 +65,14 @@ export class StoryFunctionSetRole extends StoryFunctionBase {
 }
 
 export class StoryFunctionSetTimestamp extends StoryFunctionBase {
-    variable: VariableReference;
+    constructor(
+        id: string,
+        public variable: VariableReference,
+        conditions?: ConditionRefSchema[],
+        functions?: FunctionRefSchema[])
+    {
+        super(id, conditions, functions);
+    }
 
     buildContent(): FunctionSetTimestampSchema {
         return {
@@ -64,8 +86,15 @@ export class StoryFunctionSetTimestamp extends StoryFunctionBase {
 }
 
 export class StoryFunctionIncrement extends StoryFunctionBase {
-    variable: VariableReference;
-    value: string;
+    constructor(
+        id: string,
+        public variable: VariableReference,
+        public value: string,
+        conditions?: ConditionRefSchema[],
+        functions?: FunctionRefSchema[])
+    {
+        super(id, conditions, functions);
+    }
 
     buildContent(): FunctionIncrementSchema {
         return {
@@ -80,6 +109,14 @@ export class StoryFunctionIncrement extends StoryFunctionBase {
 }
 
 export class StoryFunctionChain extends StoryFunctionBase {
+    constructor(
+        id: string,
+        conditions?: ConditionRefSchema[],
+        functions?: FunctionRefSchema[])
+    {
+        super(id, conditions, functions);
+    }
+
     //Functions is non-optional here.
     buildContent(): FunctionChainSchema {
         return {

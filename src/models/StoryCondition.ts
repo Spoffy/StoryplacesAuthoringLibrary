@@ -15,14 +15,19 @@ import {
 import {LocationRefSchema} from "../schema/LocationSchema";
 
 export abstract class StoryConditionBase implements SchemaContentBuilder<ConditionSchema> {
-    id: string;
+    constructor(public id: string) {}
 
     abstract buildContent(): ConditionSchema;
 }
 
 export class StoryConditionLogical extends StoryConditionBase {
-    operand: LogicalOperand;
-    conditions: ConditionRefSchema[];
+    constructor(
+        id: string,
+        public operand: LogicalOperand,
+        public conditions: ConditionRefSchema[])
+    {
+            super(id);
+    }
 
     buildContent(): ConditionLogicalSchema {
         return {
@@ -35,11 +40,16 @@ export class StoryConditionLogical extends StoryConditionBase {
 }
 
 export class StoryConditionComparison extends StoryConditionBase {
-    operand: ComparisonOperand;
-    a: VariableReference;
-    b: VariableReference;
-    aType: ComparisonType;
-    bType: ComparisonType;
+    constructor(
+        id: string,
+        public operand: ComparisonOperand,
+        public a: VariableReference,
+        public b: VariableReference,
+        public aType: ComparisonType,
+        public bType: ComparisonType)
+    {
+        super(id);
+    }
 
     buildContent(): ConditionComparisonSchema {
         return {
@@ -55,7 +65,9 @@ export class StoryConditionComparison extends StoryConditionBase {
 }
 
 export class StoryConditionCheck extends StoryConditionBase {
-    variable: VariableReference;
+    constructor(id: string, public variable: VariableReference) {
+        super(id);
+    }
 
     buildContent(): ConditionCheckSchema {
         return {
@@ -67,8 +79,13 @@ export class StoryConditionCheck extends StoryConditionBase {
 }
 
 export class StoryConditionLocation extends StoryConditionBase {
-    bool: boolean;
-    location: LocationRefSchema;
+    constructor(
+        id: string,
+        public bool: boolean,
+        public location: LocationRefSchema)
+    {
+        super(id);
+    }
 
     buildContent(): ConditionLocationSchema {
         return {
@@ -82,8 +99,13 @@ export class StoryConditionLocation extends StoryConditionBase {
 
 
 export class StoryConditionTimePassed extends StoryConditionBase {
-    minutes: number;
-    variable: VariableReference;
+    constructor(
+        id: string,
+        public minutes: number,
+        public variable: VariableReference)
+    {
+        super(id);
+    }
 
     buildContent(): ConditionTimePassedSchema {
         return {
@@ -96,8 +118,13 @@ export class StoryConditionTimePassed extends StoryConditionBase {
 }
 
 export class StoryConditionTimeRange extends StoryConditionBase {
-    first: string;
-    last: string;
+    constructor(
+        id: string,
+        public first: string,
+        public last: string)
+    {
+        super(id);
+    }
 
     buildContent(): ConditionTimeRangeSchema {
         return {
@@ -110,7 +137,9 @@ export class StoryConditionTimeRange extends StoryConditionBase {
 }
 
 export class StoryConditionIsRole extends StoryConditionBase {
-    role: string;
+    constructor(id: string, public role: string) {
+        super(id);
+    }
 
     buildContent(): ConditionIsRoleSchema {
         return {

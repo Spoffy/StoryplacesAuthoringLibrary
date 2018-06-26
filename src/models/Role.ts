@@ -2,8 +2,9 @@ import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
 import {RoleSchema} from "../schema/RoleSchema";
 
 export class Role implements SchemaContentBuilder<RoleSchema> {
-    id: string;
-    required?: boolean;
+    constructor(
+        public id: string,
+        public required?: boolean) {}
 
     buildContent(): RoleSchema {
         return {
