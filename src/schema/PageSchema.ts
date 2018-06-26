@@ -1,6 +1,6 @@
 import {PageTransitionSchema} from "./PageTransitionSchema";
 import {PageHintSchema} from "./PageHintSchema";
-import {StoryFunctionRefSchema} from "./StoryFunctionSchema";
+import {FunctionRefSchema} from "./FunctionSchema";
 import {ConditionRefSchema} from "./ConditionSchema";
 
 export interface PageSchema {
@@ -10,6 +10,6 @@ export interface PageSchema {
   messageToObservers?: string;
   pageTransition: PageTransitionSchema;
   hint: PageHintSchema;
-  functions: [StoryFunctionRefSchema];
-  conditions: [ConditionRefSchema];
+  functions: FunctionRefSchema[];
+  conditions: ConditionRefSchema[];
 }

@@ -15,7 +15,7 @@ export enum LogicalOperandSchema {
 export interface ConditionLogical extends ConditionBaseSchema {
     type: "logical";
     operand: LogicalOperandSchema;
-    conditions: [ConditionRefSchema];
+    conditions: ConditionRefSchema[];
 }
 
 export enum ComparisonOperandSchema {
