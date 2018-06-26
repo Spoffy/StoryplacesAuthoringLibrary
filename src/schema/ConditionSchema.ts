@@ -36,8 +36,8 @@ export enum ComparisonType {
 export interface ConditionComparisonSchema extends ConditionBaseSchema {
     type: "comparison";
     operand: ComparisonOperand;
-    a: VariableReferenceSchema;
-    b: VariableReferenceSchema;
+    a: string | VariableReferenceSchema;
+    b: string | VariableReferenceSchema;
     aType: ComparisonType;
     bType: ComparisonType;
 }

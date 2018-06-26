@@ -43,8 +43,8 @@ export class StoryConditionComparison extends StoryConditionBase {
     constructor(
         id: string,
         public operand: ComparisonOperand,
-        public a: VariableReference,
-        public b: VariableReference,
+        public a: string | VariableReference,
+        public b: string | VariableReference,
         public aType: ComparisonType,
         public bType: ComparisonType)
     {
@@ -56,8 +56,8 @@ export class StoryConditionComparison extends StoryConditionBase {
             id: this.id,
             type: "comparison",
             operand: this.operand,
-            a: this.a.buildContent(),
-            b: this.b.buildContent(),
+            a: typeof this.a == "string"? this.a : this.a.buildContent(),
+            b: typeof this.b == "string"? this.b : this.b.buildContent(),
             aType: this.aType,
             bType: this.bType
         }
