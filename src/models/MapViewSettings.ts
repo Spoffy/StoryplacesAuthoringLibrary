@@ -3,9 +3,9 @@ import {MapViewSettingsSchema} from "../schema/MapViewSettingsSchema";
 
 export class MapViewSettings implements SchemaContentBuilder<MapViewSettingsSchema> {
     constructor(
-        public map?: boolean,
-        public pageArrows?: boolean,
-        public pageDistance?: boolean) {}
+        public map: boolean = true,
+        public pageArrows: boolean = true,
+        public pageDistance: boolean = false) {}
 
     buildContent(): MapViewSettingsSchema {
         return {

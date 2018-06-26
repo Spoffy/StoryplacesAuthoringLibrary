@@ -9,14 +9,14 @@ export class Page implements  SchemaContentBuilder<PageSchema> {
     constructor(
         public name: string,
         public contentRef: string,
+        public hint: PageHint,
 
         //Unsupported
         //messageToObservers?: string,
 
-        public pageTransition: PageTransitionSchema,
-        public hint: PageHint,
-        public functions: FunctionRefSchema[],
-        public conditions: ConditionRefSchema[]) {}
+        public functions: FunctionRefSchema[] = [],
+        public conditions: ConditionRefSchema[] = [],
+        public pageTransition: PageTransitionSchema = PageTransitionSchema.next) {}
 
     buildContent(): PageSchema {
         return {

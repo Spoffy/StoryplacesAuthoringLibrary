@@ -10,22 +10,22 @@ import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
 import {StorySchema} from "../schema/StorySchema";
 
 export class Story implements SchemaContentBuilder<StorySchema> {
-    constructor(
-    public name: string,
-    public author: string,
-    public publishState: PublishStateSchema,
-    public roles: Role[],
-    public pages: Page[], //Unique
-    public content: { [index: string]: string },
-    public functions: StoryFunction[], //Unique
-    public conditions: StoryCondition[], //Unique
-    public cachedMediaIds: string[], //Unique
-    public locations: Location[], //Unique
-    public tags: string[], //Unique
-    public schemaVersion: string,
-    public audience: AudienceSchema,
-    public publishDate?: string,
-    public pagesMapViewSettings?: MapViewSettings) {}
+    constructor(public name: string) {}
+
+    public author: string;
+    public publishState: PublishStateSchema;
+    public roles: Role[] = [];
+    public pages: Page[] = []; //Unique
+    public content: { [index: string]: string };
+    public functions: StoryFunction[] = []; //Unique
+    public conditions: StoryCondition[] = []; //Unique
+    public cachedMediaIds: string[] = []; //Unique
+    public locations: Location[] = []; //Unique
+    public tags: string[] = []; //Unique
+    public schemaVersion: string;
+    public audience: AudienceSchema;
+    public publishDate?: string;
+    public pagesMapViewSettings?: MapViewSettings;
 
     buildContent(): StorySchema {
         return {

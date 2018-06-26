@@ -24,7 +24,7 @@ export class StoryConditionLogical extends StoryConditionBase {
     constructor(
         id: string,
         public operand: LogicalOperand,
-        public conditions: ConditionRefSchema[])
+        public conditions: ConditionRefSchema[] = [])
     {
             super(id);
     }
