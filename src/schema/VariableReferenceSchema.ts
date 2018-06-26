@@ -1,9 +1,9 @@
-import {VariableScopeSchema} from "./VariableScopes";
+import {VariableScope} from "./VariableScopes";
 
 export type ImplicitVariableReferenceSchema = string;
 
 export interface ExplicitVariableReferenceSchema {
-  scope: VariableScopeSchema;
+  scope: VariableScope;
   namespace: string;
   variable: string;
 }

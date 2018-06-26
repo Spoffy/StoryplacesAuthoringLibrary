@@ -4,8 +4,8 @@ import {Location} from "./Location";
 import {StoryFunction} from "./StoryFunction";
 import {StoryCondition} from "./StoryCondition";
 import {MapViewSettings} from "./MapViewSettings";
-import {PublishStateSchema} from "../schema/PublishStateSchema";
-import {AudienceSchema} from "../schema/AudienceSchema";
+import {PublishState} from "../schema/PublishState";
+import {Audience} from "../schema/AudienceSchema";
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
 import {StorySchema} from "../schema/StorySchema";
 
@@ -13,7 +13,7 @@ export class Story implements SchemaContentBuilder<StorySchema> {
     constructor(public name: string) {}
 
     public author: string;
-    public publishState: PublishStateSchema;
+    public publishState: PublishState;
     public roles: Role[] = [];
     public pages: Page[] = []; //Unique
     public content: { [index: string]: string };
@@ -23,7 +23,7 @@ export class Story implements SchemaContentBuilder<StorySchema> {
     public locations: Location[] = []; //Unique
     public tags: string[] = []; //Unique
     public schemaVersion: string;
-    public audience: AudienceSchema;
+    public audience: Audience;
     public publishDate?: string;
     public pagesMapViewSettings?: MapViewSettings;
 

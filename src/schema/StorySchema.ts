@@ -1,7 +1,7 @@
-import {PublishStateSchema} from "./PublishStateSchema";
+import {PublishState} from "./PublishState";
 import {RoleSchema} from "./RoleSchema";
 import {PageSchema} from "./PageSchema";
-import {AudienceSchema} from "./AudienceSchema";
+import {Audience} from "./AudienceSchema";
 import {LocationSchema} from "./LocationSchema";
 import {FunctionSchema} from "./FunctionSchema";
 import {ConditionSchema} from "./ConditionSchema";
@@ -10,7 +10,7 @@ import {MapViewSettingsSchema} from "./MapViewSettingsSchema";
 export interface StorySchema {
   name: string;
   author: string;
-  publishState: PublishStateSchema;
+  publishState: PublishState;
   publishDate?: string;
   roles: RoleSchema[];
   pages: PageSchema[]; //Unique
@@ -22,5 +22,5 @@ export interface StorySchema {
   tags: string[]; //Unique
   pagesMapViewSettings?: MapViewSettingsSchema;
   schemaVersion: string;
-  audience: AudienceSchema;
+  audience: Audience;
 }

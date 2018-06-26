@@ -1,5 +1,5 @@
 import {PageHint} from "./PageHint";
-import {PageTransitionSchema} from "../schema/PageTransitionSchema";
+import {PageTransition} from "../schema/PageTransition";
 import {FunctionRefSchema} from "../schema/FunctionSchema";
 import {ConditionRefSchema} from "../schema/ConditionSchema";
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
@@ -16,7 +16,7 @@ export class Page implements  SchemaContentBuilder<PageSchema> {
 
         public functions: FunctionRefSchema[] = [],
         public conditions: ConditionRefSchema[] = [],
-        public pageTransition: PageTransitionSchema = PageTransitionSchema.next) {}
+        public pageTransition: PageTransition = PageTransition.next) {}
 
     buildContent(): PageSchema {
         return {

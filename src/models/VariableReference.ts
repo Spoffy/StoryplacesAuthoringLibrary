@@ -1,10 +1,10 @@
-import {VariableScopeSchema} from "../schema/VariableScopes";
+import {VariableScope} from "../schema/VariableScopes";
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
 import {VariableReferenceSchema} from "../schema/VariableReferenceSchema";
 
 export class VariableReference implements SchemaContentBuilder<VariableReferenceSchema> {
   constructor(
-      public scope: VariableScopeSchema,
+      public scope: VariableScope,
       public namespace: string,
       public variable: string) {}
 
