@@ -8,6 +8,10 @@ export class VariableReference implements SchemaContentBuilder<VariableReference
       public namespace: string,
       public variable: string) {}
 
+  static FromVariableName(varName: string) {
+      return new VariableReference(VariableScope.shared, "this", varName);
+  }
+
   buildContent(): VariableReferenceSchema {
     return {
         scope: this.scope,
