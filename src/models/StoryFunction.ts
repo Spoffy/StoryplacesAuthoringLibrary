@@ -130,3 +130,17 @@ export class StoryFunctionChain extends StoryFunctionBase {
 
 export type StoryFunction = StoryFunctionSet | StoryFunctionSetRole | StoryFunctionSetTimestamp
                           | StoryFunctionIncrement | StoryFunctionChain;
+
+export type StoryFunctionReferenceOrDefinition = FunctionRefSchema | StoryFunction;
+
+export function IsStoryFunction(refOrFunc: StoryFunctionReferenceOrDefinition): refOrFunc is StoryFunction {
+    return typeof refOrFunc != "string";
+}
+
+export function ToStoryFunctionReference(refOrFunc: StoryFunctionReferenceOrDefinition): FunctionRefSchema {
+    if(typeof refOrFunc == "string") {
+        return refOrFunc;
+    } else {
+        return refOrFunc.id;
+    }
+}

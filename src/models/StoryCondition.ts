@@ -153,3 +153,17 @@ export class StoryConditionIsRole extends StoryConditionBase {
 export type StoryCondition = StoryConditionCheck | StoryConditionComparison | StoryConditionIsRole
                            | StoryConditionTimePassed | StoryConditionTimeRange | StoryConditionLogical
                            | StoryConditionLocation;
+
+export type ConditionReferenceOrDefinition = ConditionRefSchema | StoryCondition;
+
+export function IsCondition(refOrCond: ConditionReferenceOrDefinition): refOrCond is StoryCondition {
+    return typeof refOrCond != "string";
+}
+
+export function ToConditionReference(refOrCond: ConditionReferenceOrDefinition): ConditionRefSchema {
+    if(typeof refOrCond == "string") {
+        return refOrCond;
+    } else {
+        return refOrCond.id;
+    }
+}

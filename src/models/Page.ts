@@ -1,11 +1,12 @@
 import {PageHint} from "./PageHint";
 import {PageTransition} from "../schema/PageTransition";
-import {FunctionRefSchema} from "../schema/FunctionSchema";
-import {ConditionRefSchema} from "../schema/ConditionSchema";
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
 import {PageSchema} from "../schema/PageSchema";
+import {StoryFunctionReferenceOrDefinition, ToStoryFunctionReference} from "./StoryFunction";
+import {ConditionReferenceOrDefinition, ToConditionReference} from "./StoryCondition";
 
-export class Page implements  SchemaContentBuilder<PageSchema> {
+
+export class Page implements SchemaContentBuilder<PageSchema> {
     constructor(
         public name: string,
         public contentRef: string,
@@ -14,8 +15,8 @@ export class Page implements  SchemaContentBuilder<PageSchema> {
         //Unsupported
         //messageToObservers?: string,
 
-        public functions: FunctionRefSchema[] = [],
-        public conditions: ConditionRefSchema[] = [],
+        public functions: StoryFunctionReferenceOrDefinition[] = [],
+        public conditions: ConditionReferenceOrDefinition[] = [],
         public pageTransition: PageTransition = PageTransition.next) {}
 
     buildContent(): PageSchema {
@@ -25,8 +26,8 @@ export class Page implements  SchemaContentBuilder<PageSchema> {
             contentRef: this.contentRef,
             pageTransition: this.pageTransition,
             hint: this.hint.buildContent(),
-            functions: this.functions,
-            conditions: this.conditions
+            functions: this.functions.map(ToStoryFunctionReference),
+            conditions: this.conditions.map(ToConditionReference)
         }
     }
 
