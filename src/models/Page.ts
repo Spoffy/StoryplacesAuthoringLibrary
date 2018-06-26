@@ -6,18 +6,33 @@ import {StoryFunctionReferenceOrDefinition, ToStoryFunctionReference} from "./St
 import {ConditionReferenceOrDefinition, ToConditionReference} from "./StoryCondition";
 
 
+type PageCreationParameters = {
+    name: string,
+    contentRef: string,
+    hint: PageHint,
+
+    functions?: StoryFunctionReferenceOrDefinition[],
+    conditions?: ConditionReferenceOrDefinition[],
+    pageTransition?: PageTransition
+}
+
 export class Page implements SchemaContentBuilder<PageSchema> {
-    constructor(
-        public name: string,
-        public contentRef: string,
-        public hint: PageHint,
+    public name: string;
+    public contentRef: string;
+    public hint: PageHint;
 
-        //Unsupported
-        //messageToObservers?: string,
+    public functions: StoryFunctionReferenceOrDefinition[] = [];
+    public conditions: ConditionReferenceOrDefinition[] = [];
+    public pageTransition: PageTransition = PageTransition.next;
 
-        public functions: StoryFunctionReferenceOrDefinition[] = [],
-        public conditions: ConditionReferenceOrDefinition[] = [],
-        public pageTransition: PageTransition = PageTransition.next) {}
+    constructor({name, contentRef, hint, functions, conditions, pageTransition}: PageCreationParameters) {
+        this.name = name;
+        this.contentRef = contentRef;
+        this.hint = hint;
+        this.functions = functions || [];
+        this.conditions = conditions || [];
+        this.pageTransition = pageTransition || PageTransition.next;
+    }
 
     buildContent(): PageSchema {
         return {
