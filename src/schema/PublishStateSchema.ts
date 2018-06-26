@@ -1,6 +1,6 @@
 export enum PublishStateSchema {
-  published,
-  draft,
-  review,
-  preview
+  published = "published",
+  draft = "draft",
+  review = "review",
+  preview = "preview"
 }

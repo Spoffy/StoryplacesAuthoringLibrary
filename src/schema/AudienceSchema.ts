@@ -1,6 +1,6 @@
 export enum AudienceSchema {
-  family,
-  general,
-  advisory
+  family = "family",
+  general = "general",
+  advisory = "advisory"
 }
 

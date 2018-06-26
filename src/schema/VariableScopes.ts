@@ -1,4 +1,4 @@
 export enum VariableScopeSchema {
-  global,
-  shared
+  global = "global",
+  shared = "shared"
 }

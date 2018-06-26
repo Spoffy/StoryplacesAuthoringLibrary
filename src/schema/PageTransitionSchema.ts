@@ -1,4 +1,4 @@
 export enum PageTransitionSchema {
-  next,
-  end
+  next = "next",
+  end = "end"
 }

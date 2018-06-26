@@ -3,8 +3,8 @@ import {ConditionRefSchema} from "./ConditionSchema";
 
 export interface FunctionBaseSchema {
     id: string;
-    conditions: [ConditionRefSchema];
-    functions?: [FunctionRefSchema]; //Unique
+    conditions: ConditionRefSchema[];
+    functions?: FunctionRefSchema[]; //Unique
 }
 
 export interface FunctionSetSchema extends FunctionBaseSchema {

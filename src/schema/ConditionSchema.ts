@@ -5,41 +5,41 @@ export interface ConditionBaseSchema {
     id: string;
 }
 
-export enum LogicalOperandSchema {
-    AND,
-    OR,
-    NOR,
-    NAND
+export enum LogicalOperand {
+    AND = "AND",
+    OR = "OR",
+    NOR = "NOR",
+    NAND = "NAND"
 }
 
-export interface ConditionLogical extends ConditionBaseSchema {
+export interface ConditionLogicalSchema extends ConditionBaseSchema {
     type: "logical";
-    operand: LogicalOperandSchema;
+    operand: LogicalOperand;
     conditions: ConditionRefSchema[];
 }
 
-export enum ComparisonOperandSchema {
-    "==",
-    "!=",
-    "<=",
-    ">=",
-    "<",
-    ">"
+export enum ComparisonOperand {
+    EQUAL = "==",
+    NOT_EQUAL = "!=",
+    LESS_OR_EQUAL = "<=",
+    GREATER_OR_EQUAL = ">=",
+    LESS = "<",
+    GREATER = ">"
 }
 
-export enum ComparisonTypeSchema {
-    Variable,
-    Integer,
-    String
+export enum ComparisonType {
+    Variable = "Variable",
+    Integer = "Integer",
+    String = "String"
 }
 
 export interface ConditionComparisonSchema extends ConditionBaseSchema {
     type: "comparison";
-    operand: ComparisonOperandSchema;
+    operand: ComparisonOperand;
     a: VariableReferenceSchema;
     b: VariableReferenceSchema;
-    aType: ComparisonTypeSchema;
-    bType: ComparisonTypeSchema;
+    aType: ComparisonType;
+    bType: ComparisonType;
 }
 
 export interface ConditionCheckSchema extends ConditionBaseSchema {
@@ -72,7 +72,7 @@ export interface ConditionIsRoleSchema extends ConditionBaseSchema {
 }
 
 export type ConditionSchema = ConditionCheckSchema | ConditionComparisonSchema | ConditionIsRoleSchema
-                           | ConditionTimePassedSchema | ConditionTimeRangeSchema | ConditionLogical
+                           | ConditionTimePassedSchema | ConditionTimeRangeSchema | ConditionLogicalSchema
                            | ConditionLocationSchema;
 
 export type ConditionRefSchema = string;
