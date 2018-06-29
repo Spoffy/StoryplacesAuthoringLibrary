@@ -20,6 +20,8 @@ type PageCreationParameters = {
 }
 
 export class Page implements SchemaContentBuilder<PageSchema> {
+    private static pageCounter: number = 0;
+    public id: string;
     public name: string;
     public contentRef: string;
     public hint: PageHint;
@@ -29,20 +31,23 @@ export class Page implements SchemaContentBuilder<PageSchema> {
     public pageTransition: PageTransition = PageTransition.next;
 
     constructor({name, contentRef, hint, functions, conditions, pageTransition, singleVisit}: PageCreationParameters) {
+        Page.pageCounter += 1;
+
+        this.id = name + Page.pageCounter;        
         this.name = name;
         this.contentRef = contentRef;
         this.hint = hint;
         this.functions = functions || [];
         this.conditions = conditions || [];
         this.pageTransition = pageTransition || PageTransition.next;
-
+        
         if(singleVisit) {
             this.makeSingleVisit();
         }
     }
 
     private makeSingleVisit() {
-        let name = this.name + " VisitGuard";
+        let name = this.id + " VisitGuard";
         let varRef = VariableReference.FromVariableName(name)
         this.functions.push(new StoryFunctionSet(name, varRef, "true"))
         this.conditions.push(new StoryConditionComparison(
@@ -55,7 +60,7 @@ export class Page implements SchemaContentBuilder<PageSchema> {
 
     buildContent(): PageSchema {
         return {
-            id: this.name,
+            id: this.id,
             name: this.name,
             contentRef: this.contentRef,
             pageTransition: this.pageTransition,
