@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc && node dist/main.js",
-    "ties": "tsc && node dist/ties.js",
+    "ties": "tsc && node dist/ties.js > thetiesthatbind.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Callum Spawforth (cs14g13@soton.ac.uk)",
