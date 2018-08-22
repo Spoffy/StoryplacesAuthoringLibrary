@@ -10,7 +10,7 @@ import {ComparisonOperand, ComparisonType} from "../schema/ConditionSchema";
 
 type PageCreationParameters = {
     name: string,
-    contentRef: string,
+    content: string,
     hint: PageHint,
 
     functions?: StoryFunctionReferenceOrDefinition[],
@@ -23,19 +23,19 @@ export class Page implements SchemaContentBuilder<PageSchema> {
     private static pageCounter: number = 0;
     public id: string;
     public name: string;
-    public contentRef: string;
+    public content: string;
     public hint: PageHint;
 
     public functions: StoryFunctionReferenceOrDefinition[] = [];
     public conditions: ConditionReferenceOrDefinition[] = [];
     public pageTransition: PageTransition = PageTransition.next;
 
-    constructor({name, contentRef, hint, functions, conditions, pageTransition, singleVisit}: PageCreationParameters) {
+    constructor({name, content, hint, functions, conditions, pageTransition, singleVisit}: PageCreationParameters) {
         Page.pageCounter += 1;
 
         this.id = name + Page.pageCounter;        
         this.name = name;
-        this.contentRef = contentRef;
+        this.content = content;
         this.hint = hint;
         this.functions = functions || [];
         this.conditions = conditions || [];
@@ -56,6 +56,10 @@ export class Page implements SchemaContentBuilder<PageSchema> {
             "true",
             ComparisonType.Variable,
             ComparisonType.String));
+    }
+
+    get contentRef(): string {
+        return this.id;
     }
 
     buildContent(): PageSchema {

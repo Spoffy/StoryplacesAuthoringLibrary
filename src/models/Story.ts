@@ -18,7 +18,6 @@ export class Story implements SchemaContentBuilder<StorySchema> {
     public publishState: PublishState;
     public roles: Role[] = [];
     public pages: Page[] = []; //Unique
-    public content: { [index: string]: string } = {};
     //public functions: StoryFunction[] = []; //Unique
     //public conditions: StoryCondition[] = []; //Unique
     public cachedMediaIds: string[] = []; //Unique
@@ -37,7 +36,7 @@ export class Story implements SchemaContentBuilder<StorySchema> {
             publishDate: this.publishDate,
             roles: this.roles.map(role => role.buildContent()),
             pages: this.pages.map(page => page.buildContent()),
-            content: this.content,
+            content: this.buildContentStore(),
             functions: this.buildFunctions(),
             conditions: this.buildConditions(),
             cachedMediaIds: this.cachedMediaIds,
@@ -47,6 +46,13 @@ export class Story implements SchemaContentBuilder<StorySchema> {
             schemaVersion: this.schemaVersion,
             audience: this.audience
         }
+    }
+
+    private buildContentStore(): {[index: string]: string} {
+        return this.pages.reduce((contentStore, page) => {
+            contentStore[page.contentRef] = page.content;
+            return contentStore;
+        }, {});
     }
 
     private functionsInPages(): StoryFunction[] {

@@ -37,11 +37,6 @@ function AddPagesToPhase(pages: Page[], phase: Phase): void {
   });
 }
 
-function CreateContent(story: Story, content: string): string {
-  story.content[content] = content;
-  return content;
-}
-
 interface Lock {
 	var: VariableReference;
 	lockFunction: StoryFunction;
@@ -130,8 +125,8 @@ story.roles.push(prisonerRole);
 
 let chooseRoles = new Page({
     name: "Please Choose Your Role",
-    contentRef: CreateContent(story, "Choose which role you would like to take in this story: Prisoner or Captor!"),
-	  singleVisit: true,
+    content: "Choose which role you would like to take in this story: Prisoner or Captor!",
+    singleVisit: true,
     hint: new PageHint("Select your role in the story..."),
 });
 story.pages.push(chooseRoles);
@@ -139,7 +134,7 @@ story.pages.push(chooseRoles);
 //intro page for the captor
 let chooseCaptor = new Page({
     name: "The Captor",
-    contentRef: "Text introducing the captor...",
+    content: "Text introducing the captor...",
     singleVisit: true,
     hint: new PageHint("Choose to follow the captor")
 });
@@ -149,7 +144,7 @@ story.pages.push(chooseCaptor);
 //intro page for the prisoner
 let choosePrisoner = new Page({
     name: "The Prisoner",
-    contentRef: "Text introducing the prisoner...",
+    content: "Text introducing the prisoner...",
     singleVisit: true,
     hint: new PageHint("Choose to follow the prisoner")
 });
@@ -173,14 +168,14 @@ choosePrisoner.functions.push(morningPhasePrisoner.enablePhaseFunction); //make 
 //initial options - available throughout the morning
 let whyHereCaptor = new Page({
     name: "For the Cause",
-    contentRef: "Text explaining why the captor is doing this ...",
+    content: "Text explaining why the captor is doing this ...",
     hint: new PageHint("there is always a reason"),
     singleVisit: true,
 });
 
 let whyHerePrisoner = new Page({
     name: "For the Cause",
-    contentRef: "Text explaining why the captor is doing this ...",
+    content: "Text explaining why the captor is doing this ...",
     hint: new PageHint("they always have a reason"),
     singleVisit: true
 });
@@ -192,7 +187,7 @@ let whyHerePrisoner = new Page({
 //one-off pages - alternatives that close off options for the other reader
 let offeringADrinkCaptor = new Page({
     name: "I offered him a drink",
-    contentRef: "Text: captor helps the prisoner to take a drink",
+    content: "Text: captor helps the prisoner to take a drink",
     hint: new PageHint("He'll pass out in this heat"),
     singleVisit: true,
 });
@@ -200,7 +195,7 @@ AddPagesToPhase([offeringADrinkCaptor], morningPhaseCaptor);
 
 let forcingADrinkCaptor = new Page({
     name: "I forced him to drink",
-    contentRef: "Text: captor forced the prisoner to take a drink",
+    content: "Text: captor forced the prisoner to take a drink",
     hint: new PageHint("I can't have him die on me"),
     singleVisit: true,
 });
@@ -208,7 +203,7 @@ AddPagesToPhase([forcingADrinkCaptor], morningPhaseCaptor);
 
 let offeringADrinkPrisoner = new Page({
     name: "He offered me a drink",
-    contentRef: "Text: captor helps the prisoner to take a drink",
+    content: "Text: captor helps the prisoner to take a drink",
     hint: new PageHint("I'll pass out in this heat"),
     singleVisit: true,
 });
@@ -216,7 +211,7 @@ AddPagesToPhase([offeringADrinkPrisoner], morningPhasePrisoner);
 
 let forcingADrinkPrisoner = new Page({
     name: "He forced me to drink",
-    contentRef: "Text: captor forced the prisoner to take a drink",
+    content: "Text: captor forced the prisoner to take a drink",
     hint: new PageHint("Is he worried that I'll die on him?"),
     singleVisit: true,
 });
@@ -233,7 +228,7 @@ locks([forcingADrinkCaptor, forcingADrinkPrisoner],
 //transition node - moves the story onwards to the afternoon (same for both roles)
 let moveToAfternoon = new Page({
     name: "Noon",
-    contentRef: "Text explaining that time progresses to afternoon...",
+    content: "Text explaining that time progresses to afternoon...",
     hint: new PageHint("Is it noon already?")
 });
 

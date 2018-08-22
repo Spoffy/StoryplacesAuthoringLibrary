@@ -21,16 +21,15 @@ let var1 = new VariableReference(VariableScope.shared, "this", "magic");
 let setFunc = new StoryFunctionSet("setThing", var1, "false");
 let page1 = new Page({
     name: "Test",
-    contentRef: "TestContent",
+    content: "TestContent",
     hint: new PageHint("Go north"),
     functions: [setFunc]
 });
 story.pages.push(page1);
-story.content["TestContent"] = "bananas";
 
 let page2 = new Page({
     name: "Page 2",
-    contentRef: "TestContent",
+    content: "TestContent",
     hint: new PageHint("Page2"),
     functions: [setFunc],
     singleVisit: true
