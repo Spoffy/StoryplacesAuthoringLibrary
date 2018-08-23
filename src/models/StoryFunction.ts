@@ -9,12 +9,29 @@ import {
 } from "../schema/FunctionSchema";
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
 import {ConditionRefSchema} from "../schema/ConditionSchema";
+import {HasDependencies} from "../interfaces/Dependencies";
+import {ConditionReferenceOrDefinition, IsCondition, ToConditionReference} from "./StoryCondition";
 
-export abstract class StoryFunctionBase implements SchemaContentBuilder<FunctionSchema> {
+export abstract class StoryFunctionBase implements SchemaContentBuilder<FunctionSchema>, HasDependencies {
     constructor(
         public id: string,
-        public conditions: ConditionRefSchema[] = [],
-        public functions: FunctionRefSchema[] = []) {}
+        public conditions: ConditionReferenceOrDefinition[] = [],
+        public functions: StoryFunctionReferenceOrDefinition[] = []) {}
+
+    get dependencies() {
+        return {
+            conditions: this.conditions.filter(IsCondition),
+            functions: this.functions.filter(IsStoryFunction)
+        }
+    }
+
+    get conditionReferences(): ConditionRefSchema[] {
+        return this.conditions.map(ToConditionReference);
+    }
+
+    get functionReferences(): FunctionRefSchema[] {
+        return this.functions.map(ToStoryFunctionReference);
+    }
 
     abstract buildContent(): FunctionSchema;
 }
@@ -34,8 +51,8 @@ export class StoryFunctionSet extends StoryFunctionBase {
     buildContent(): FunctionSetSchema {
         return {
             id: this.id,
-            conditions: this.conditions,
-            functions: this.functions,
+            conditions: this.conditionReferences,
+            functions: this.functionReferences,
             type: "set",
             variable: this.variable.buildContent(),
             value: this.value
@@ -56,8 +73,8 @@ export class StoryFunctionSetRole extends StoryFunctionBase {
     buildContent(): FunctionSetRoleSchema {
         return {
             id: this.id,
-            conditions: this.conditions,
-            functions: this.functions,
+            conditions: this.conditionReferences,
+            functions: this.functionReferences,
             type: "setrole",
             value: this.value
         }
@@ -77,8 +94,8 @@ export class StoryFunctionSetTimestamp extends StoryFunctionBase {
     buildContent(): FunctionSetTimestampSchema {
         return {
             id: this.id,
-            conditions: this.conditions,
-            functions: this.functions,
+            conditions: this.conditionReferences,
+            functions: this.functionReferences,
             type: "settimestamp",
             variable: this.variable.buildContent()
         }
@@ -99,8 +116,8 @@ export class StoryFunctionIncrement extends StoryFunctionBase {
     buildContent(): FunctionIncrementSchema {
         return {
             id: this.id,
-            conditions: this.conditions,
-            functions: this.functions,
+            conditions: this.conditionReferences,
+            functions: this.functionReferences,
             type: "increment",
             variable: this.variable.buildContent(),
             value: this.value
@@ -121,8 +138,8 @@ export class StoryFunctionChain extends StoryFunctionBase {
     buildContent(): FunctionChainSchema {
         return {
             id: this.id,
-            conditions: this.conditions,
-            functions: this.functions,
+            conditions: this.conditionReferences,
+            functions: this.functionReferences,
             type: "chain"
         }
     }

@@ -10,6 +10,7 @@ import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
 import {StorySchema} from "../schema/StorySchema";
 import {FunctionSchema} from "../schema/FunctionSchema";
 import {ConditionSchema} from "../schema/ConditionSchema";
+import {Dependencies, EmptyDependencies, HasDependencies, MergeDependencies} from "../interfaces/Dependencies";
 
 export class Story implements SchemaContentBuilder<StorySchema> {
     constructor(public name: string) {}
@@ -29,6 +30,8 @@ export class Story implements SchemaContentBuilder<StorySchema> {
     public pagesMapViewSettings?: MapViewSettings;
 
     buildContent(): StorySchema {
+        let dependencies = this.calculateDependencies();
+
         return {
             name: this.name,
             author: this.author,
@@ -37,8 +40,8 @@ export class Story implements SchemaContentBuilder<StorySchema> {
             roles: this.roles.map(role => role.buildContent()),
             pages: this.pages.map(page => page.buildContent()),
             content: this.buildContentStore(),
-            functions: this.buildFunctions(),
-            conditions: this.buildConditions(),
+            functions: this.buildFunctions(dependencies.functions),
+            conditions: this.buildConditions(dependencies.conditions),
             cachedMediaIds: this.cachedMediaIds,
             locations: this.locations.map(location => location.buildContent()),
             tags: this.tags,
@@ -55,13 +58,37 @@ export class Story implements SchemaContentBuilder<StorySchema> {
         }, {});
     }
 
-    private functionsInPages(): StoryFunction[] {
-        return this.pages.reduce((accum, page) => accum.concat(page.functions), []).filter(IsStoryFunction);
+    private calculateDependencies(): Dependencies {
+        return this.calculateDependenciesRec(EmptyDependencies(), this.pages);
     }
 
-    private buildFunctions(): FunctionSchema[] {
-        let functionsInPages = this.functionsInPages();
-        return functionsInPages.reduce((result: StoryFunction[], funcInPage: StoryFunction) => {
+    private calculateDependenciesRec(currentDependencies: Dependencies, toProcess: HasDependencies[]): Dependencies {
+        if(toProcess.length == 0) { return currentDependencies; }
+        let nextDependencies = MergeDependencies(toProcess.map(thing => thing.dependencies));
+        let nextToProcess: HasDependencies[] = [];
+
+        nextDependencies.conditions.forEach((cond) => {
+            if(currentDependencies.conditions.indexOf(cond) < 0) {
+                nextToProcess.push(cond);
+            } else {
+                console.error("Circular dependency on " + cond.id)
+            }
+        });
+
+        nextDependencies.functions.forEach((func) => {
+            if(currentDependencies.functions.indexOf(func) < 0) {
+                nextToProcess.push(func);
+            } else {
+                console.error("Circular dependency on " + func.id)
+            }
+        });
+
+        currentDependencies = MergeDependencies([currentDependencies, nextDependencies]);
+        return this.calculateDependenciesRec(currentDependencies, nextToProcess);
+    }
+
+    private buildFunctions(rawFunctions: StoryFunction[]): FunctionSchema[] {
+        return rawFunctions.reduce((result: StoryFunction[], funcInPage: StoryFunction) => {
             let funcInAccumWithSameId = result.find(resultFunc => funcInPage.id == resultFunc.id);
             if(!funcInAccumWithSameId) {
                 result.push(funcInPage);
@@ -72,13 +99,8 @@ export class Story implements SchemaContentBuilder<StorySchema> {
         }, []).map(func => func.buildContent());
     }
 
-    private conditionsInPages(): StoryCondition[] {
-        return this.pages.reduce((accum, page) => accum.concat(page.conditions), []).filter(IsCondition);
-    }
-
-    private buildConditions(): ConditionSchema[] {
-        let conditionsInPages = this.conditionsInPages();
-        return conditionsInPages.reduce((result: StoryCondition[], condInPage: StoryCondition) => {
+    private buildConditions(rawConditions: StoryCondition[]): ConditionSchema[] {
+        return rawConditions.reduce((result: StoryCondition[], condInPage: StoryCondition) => {
             let condInAccumWithSameId = result.find(resultCond => condInPage.id == resultCond.id);
             if(!condInAccumWithSameId) {
                 result.push(condInPage);

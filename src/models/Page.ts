@@ -2,10 +2,17 @@ import {PageHint} from "./PageHint";
 import {PageTransition} from "../schema/PageTransition";
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
 import {PageSchema} from "../schema/PageSchema";
-import {StoryFunctionReferenceOrDefinition, StoryFunctionSet, ToStoryFunctionReference} from "./StoryFunction";
-import {ConditionReferenceOrDefinition, StoryConditionComparison, ToConditionReference} from "./StoryCondition";
+import {
+    IsStoryFunction, StoryFunctionReferenceOrDefinition, StoryFunctionSet,
+    ToStoryFunctionReference
+} from "./StoryFunction";
+import {
+    ConditionReferenceOrDefinition, IsCondition, StoryConditionComparison,
+    ToConditionReference
+} from "./StoryCondition";
 import {VariableReference} from "./VariableReference";
 import {ComparisonOperand, ComparisonType} from "../schema/ConditionSchema";
+import {Dependencies, HasDependencies} from "../interfaces/Dependencies";
 
 
 type PageCreationParameters = {
@@ -19,7 +26,7 @@ type PageCreationParameters = {
     singleVisit?: boolean
 }
 
-export class Page implements SchemaContentBuilder<PageSchema> {
+export class Page implements SchemaContentBuilder<PageSchema>, HasDependencies {
     private static pageCounter: number = 0;
     public id: string;
     public name: string;
@@ -71,6 +78,13 @@ export class Page implements SchemaContentBuilder<PageSchema> {
             hint: this.hint.buildContent(),
             functions: this.functions.map(ToStoryFunctionReference),
             conditions: this.conditions.map(ToConditionReference)
+        }
+    }
+
+    get dependencies(): Dependencies {
+        return {
+            conditions: this.conditions.filter(IsCondition),
+            functions: this.functions.filter(IsStoryFunction)
         }
     }
 }

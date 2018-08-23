@@ -13,20 +13,32 @@ import {
     LogicalOperand
 } from "../schema/ConditionSchema";
 import {LocationRefSchema} from "../schema/LocationSchema";
+import {StoryFunction, StoryFunctionReferenceOrDefinition} from "./StoryFunction";
+import {EmptyDependencies, HasDependencies} from "../interfaces/Dependencies";
 
-export abstract class StoryConditionBase implements SchemaContentBuilder<ConditionSchema> {
+export abstract class StoryConditionBase implements SchemaContentBuilder<ConditionSchema>, HasDependencies {
     constructor(public id: string) {}
 
     abstract buildContent(): ConditionSchema;
+
+    get dependencies() {
+        return EmptyDependencies();
+    }
 }
 
 export class StoryConditionLogical extends StoryConditionBase {
     constructor(
         id: string,
         public operand: LogicalOperand,
-        public conditions: ConditionRefSchema[] = [])
+        public conditions: ConditionReferenceOrDefinition[] = [])
     {
             super(id);
+    }
+
+    get dependencies() {
+        let myDependencies = EmptyDependencies();
+        myDependencies.conditions = this.conditions.filter(IsCondition);
+        return myDependencies;
     }
 
     buildContent(): ConditionLogicalSchema {
@@ -34,7 +46,7 @@ export class StoryConditionLogical extends StoryConditionBase {
             id: this.id,
             type: "logical",
             operand: this.operand,
-            conditions: this.conditions
+            conditions: this.conditions.map(ToConditionReference)
         }
     }
 }

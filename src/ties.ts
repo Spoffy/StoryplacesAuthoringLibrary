@@ -6,9 +6,25 @@ import {PageHint} from "./models/PageHint";
 import {VariableReference} from "./models/VariableReference";
 import {VariableScope} from "./schema/VariableScopes";
 import {StoryFunction, StoryFunctionSet} from "./models/StoryFunction";
-import {StoryCondition, StoryConditionComparison} from "./models/StoryCondition";
-import {ComparisonOperand, ComparisonType} from "./schema/ConditionSchema";
+import {
+    StoryCondition, StoryConditionCheck, StoryConditionComparison,
+    StoryConditionLogical
+} from "./models/StoryCondition";
+import {ComparisonOperand, ComparisonType, LogicalOperand} from "./schema/ConditionSchema";
 import {Audience} from "./schema/AudienceSchema";
+
+/**
+ * Extensions to base library for shorthand.
+ * At some point, merge these back into the library
+ */
+
+class TiesStory extends Story {
+    public NewPage(pageArgs): Page {
+        let page = new Page(pageArgs);
+        this.pages.push(page);
+        return page;
+    }
+}
 
 /*** start - helper code to create phases and counter-locking ***/
 
@@ -75,9 +91,9 @@ function locks(lockingPages: Page[], pagesToLock: Page[]): Lock {
 let unlockCount: number = 0;
 
 function unlocks(unlockingPages: Page[], pagesToUnlock: Page[]): Lock {
-  unlockCount += 1;
-	let newVar = new VariableReference(VariableScope.shared, "unlocks", "lock" + lockCount);
-  let newLock = {
+    unlockCount += 1;
+    let newVar = new VariableReference(VariableScope.shared, "unlocks", "lock" + lockCount);
+    let newLock = {
 		var: newVar,
 		lockFunction: new StoryFunctionSet("unlockLock" + lockCount, newVar, "true"),
 		lockedCondition: new StoryConditionComparison(
@@ -101,10 +117,52 @@ function unlocks(unlockingPages: Page[], pagesToUnlock: Page[]): Lock {
 	return newLock;
 }
 
+interface AlternativePages {
+    pages: Page[],
+    functions: StoryFunction[],
+    conditions: StoryCondition[]
+}
+
+function alternativePages(pages: Page[], variable?: VariableReference, name?: string): AlternativePages {
+    //Should be unique
+    name = name || "[" + pages.map(page => page.id).join() + "]";
+    variable = variable || new VariableReference(VariableScope.shared, "alternativePages", name);
+    let alternativePages = {pages: [], functions: [], conditions: []};
+    let isSetCondition = new StoryConditionCheck("Alternate Node Chosen for " + name, variable);
+
+    pages.forEach(page => {
+        alternativePages.pages.push(page);
+        let lockOthersFunction = new StoryFunctionSet("Disable All But " + page.name + " for " + name, variable, page.id);
+        let pageWasNotChosenCondition = new StoryConditionComparison(
+            "Is " + page.name + " selected for " + name,
+            ComparisonOperand.NOT_EQUAL,
+            variable,
+            page.id,
+            ComparisonType.Variable,
+            ComparisonType.String);
+
+        //Node is unavailable if Alternate Node Choice has occurred && this page wasn't chosen - so invert using NAND.
+        let isAvailableCondition = new StoryConditionLogical(
+            "Is " + page.id + " available for alternate node " + name,
+            LogicalOperand.NAND,
+            [isSetCondition.id, pageWasNotChosenCondition.id]
+        );
+
+
+        alternativePages.functions.push(lockOthersFunction);
+        alternativePages.conditions.push(isAvailableCondition);
+
+        page.functions.push(lockOthersFunction);
+        page.conditions.push(isAvailableCondition);
+    });
+
+    return alternativePages;
+}
+
 /*** end - helper code to create phases ***/
 
 //story declaration
-let story = new Story("The Ties That Bind");
+let story = new TiesStory("The Ties That Bind");
 story.author = "Callum Spawforth and David Millard";
 story.schemaVersion = "";
 story.publishDate = "1/7/2018";
@@ -123,35 +181,31 @@ story.roles.push(prisonerRole);
 // ********* INTRO - AND ROLE CHOICE *********
 
 
-let chooseRoles = new Page({
+let chooseRoles = story.NewPage({
     name: "Please Choose Your Role",
     content: "Choose which role you would like to take in this story: Prisoner or Captor!",
     singleVisit: true,
     hint: new PageHint("Select your role in the story..."),
 });
-story.pages.push(chooseRoles);
 
 //intro page for the captor
-let chooseCaptor = new Page({
+let chooseCaptor = story.NewPage({
     name: "The Captor",
     content: "Text introducing the captor...",
     singleVisit: true,
     hint: new PageHint("Choose to follow the captor")
 });
-//chooseCaptor.unlockedBy(chooseRoles);						***** WANT TO ADD THIS ****
-story.pages.push(chooseCaptor);
 
 //intro page for the prisoner
-let choosePrisoner = new Page({
+let choosePrisoner = story.NewPage({
     name: "The Prisoner",
     content: "Text introducing the prisoner...",
     singleVisit: true,
     hint: new PageHint("Choose to follow the prisoner")
 });
-//choosePrisoner.unlockedBy(chooseRoles);						***** WANT TO ADD THIS ****
-story.pages.push(choosePrisoner);
 
-
+unlocks([chooseRoles], [chooseCaptor, choosePrisoner]);
+alternativePages([chooseCaptor, choosePrisoner]);
 
 
 // ********* ACT 1 - MORNING FOR THE CAPTOR / PRISONER *********
