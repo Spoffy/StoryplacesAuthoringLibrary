@@ -1,8 +1,8 @@
 import {Role} from "./Role";
 import {Page} from "./Page";
 import {Location} from "./Location";
-import {IsStoryFunction, StoryFunction} from "./StoryFunction";
-import {IsCondition, StoryCondition} from "./StoryCondition";
+import {StoryFunction} from "./StoryFunction";
+import {StoryCondition} from "./StoryCondition";
 import {MapViewSettings} from "./MapViewSettings";
 import {PublishState} from "../schema/PublishState";
 import {Audience} from "../schema/AudienceSchema";
@@ -30,7 +30,7 @@ export class Story implements SchemaContentBuilder<StorySchema> {
     public pagesMapViewSettings?: MapViewSettings;
 
     buildContent(): StorySchema {
-        let dependencies = this.calculateDependencies();
+        let dependencies = DependencyBuilder.Build(this.pages);
 
         return {
             name: this.name,
@@ -58,35 +58,6 @@ export class Story implements SchemaContentBuilder<StorySchema> {
         }, {});
     }
 
-    private calculateDependencies(): Dependencies {
-        return this.calculateDependenciesRec(EmptyDependencies(), this.pages);
-    }
-
-    private calculateDependenciesRec(currentDependencies: Dependencies, toProcess: HasDependencies[]): Dependencies {
-        if(toProcess.length == 0) { return currentDependencies; }
-        let nextDependencies = MergeDependencies(toProcess.map(thing => thing.dependencies));
-        let nextToProcess: HasDependencies[] = [];
-
-        nextDependencies.conditions.forEach((cond) => {
-            if(currentDependencies.conditions.indexOf(cond) < 0) {
-                nextToProcess.push(cond);
-            } else {
-                console.error("Circular dependency on " + cond.id)
-            }
-        });
-
-        nextDependencies.functions.forEach((func) => {
-            if(currentDependencies.functions.indexOf(func) < 0) {
-                nextToProcess.push(func);
-            } else {
-                console.error("Circular dependency on " + func.id)
-            }
-        });
-
-        currentDependencies = MergeDependencies([currentDependencies, nextDependencies]);
-        return this.calculateDependenciesRec(currentDependencies, nextToProcess);
-    }
-
     private buildFunctions(rawFunctions: StoryFunction[]): FunctionSchema[] {
         return rawFunctions.reduce((result: StoryFunction[], funcInPage: StoryFunction) => {
             let funcInAccumWithSameId = result.find(resultFunc => funcInPage.id == resultFunc.id);
@@ -109,5 +80,38 @@ export class Story implements SchemaContentBuilder<StorySchema> {
             }
             return result;
         }, []).map(cond => cond.buildContent());
+    }
+}
+
+class DependencyBuilder {
+    static Build(startingDependents: HasDependencies[]): Dependencies {
+        return DependencyBuilder.calculateDependenciesRec(EmptyDependencies(), startingDependents);
+    }
+
+    private static calculateDependenciesRec(currentDependencies: Dependencies, toProcess: HasDependencies[]): Dependencies {
+        if(toProcess.length == 0) { return currentDependencies; }
+        let nextDependencies = MergeDependencies(toProcess.map(thing => thing.dependencies));
+        let nextToProcess: HasDependencies[] = [];
+
+        nextDependencies.conditions.forEach((cond) => {
+            //Process it if we haven't already
+            if(currentDependencies.conditions.indexOf(cond) < 0) {
+                nextToProcess.push(cond);
+            } else {
+                console.error("Circular dependency on " + cond.id)
+            }
+        });
+
+        nextDependencies.functions.forEach((func) => {
+            if(currentDependencies.functions.indexOf(func) < 0) {
+                nextToProcess.push(func);
+            } else {
+                console.error("Circular dependency on " + func.id)
+            }
+        });
+
+        //Merge after the checks to avoid adding to the dependencies as we iterate.
+        currentDependencies = MergeDependencies([currentDependencies, nextDependencies]);
+        return this.calculateDependenciesRec(currentDependencies, nextToProcess);
     }
 }
