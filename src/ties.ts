@@ -145,7 +145,7 @@ function alternativePages(pages: Page[], variable?: VariableReference, name?: st
         let isAvailableCondition = new StoryConditionLogical(
             "Is " + page.id + " available for alternate node " + name,
             LogicalOperand.NAND,
-            [isSetCondition.id, pageWasNotChosenCondition.id]
+            [isSetCondition, pageWasNotChosenCondition]
         );
 
 
