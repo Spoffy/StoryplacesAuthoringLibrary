@@ -7,7 +7,7 @@ import {VariableReference} from "./models/VariableReference";
 import {VariableScope} from "./schema/VariableScopes";
 import {StoryFunction, StoryFunctionSet} from "./models/StoryFunction";
 import {
-    StoryCondition, StoryConditionCheck, StoryConditionComparison,
+    StoryCondition, StoryConditionCheck, StoryConditionComparison, StoryConditionIsRole,
     StoryConditionLogical
 } from "./models/StoryCondition";
 import {ComparisonOperand, ComparisonType, LogicalOperand} from "./schema/ConditionSchema";
@@ -170,13 +170,34 @@ story.publishState = PublishState.published;
 story.audience = Audience.general;
 
 //set up roles and functions to check for roles
-let captorRole = new Role("Captor)")
+let captorRole = new Role("Captor");
 story.roles.push(captorRole);
 //let isCaptor = new StoryConditionIsRole("isCaptor", captorRole);
 
-let prisonerRole = new Role("Prisoner)")
+let prisonerRole = new Role("Prisoner");
 story.roles.push(prisonerRole);
 //let isPrisoner = new StoryConditionIsRole("isPrisoner", prisonerRole);
+
+let captorChosenVariable = new VariableReference(
+    VariableScope.shared,
+    "roles",
+    "Captor"
+);
+
+let prisonerChosenVariable = new VariableReference(
+    VariableScope.shared,
+    "roles",
+    "Prisoner"
+);
+
+let captorRoleFilled = new StoryConditionCheck("CaptorRoleFilled", captorChosenVariable);
+let prisonerRoleFilled = new StoryConditionCheck("PrisonerRoleFilled", prisonerChosenVariable);
+let setCaptorRoleFilled = new StoryFunctionSet("CaptorRoleFilled", captorChosenVariable, "true");
+let setPrisonerRoleFilled = new StoryFunctionSet("PrisonerRoleFilled", prisonerChosenVariable, "true");
+let noCaptor = new StoryConditionLogical("CaptorRoleEmpty", LogicalOperand.NAND, [captorRoleFilled]);
+let noPrisoner = new StoryConditionLogical("PrisonerRoleEmpty", LogicalOperand.NAND, [prisonerRoleFilled]);
+let isCaptor = new StoryConditionIsRole("IsCaptor", captorRole.id);
+let isPrisoner = new StoryConditionIsRole("IsPrisoner", prisonerRole.id);
 
 // ********* INTRO - AND ROLE CHOICE *********
 
@@ -193,7 +214,9 @@ let chooseCaptor = story.NewPage({
     name: "The Captor",
     content: "Text introducing the captor...",
     singleVisit: true,
-    hint: new PageHint("Choose to follow the captor")
+    hint: new PageHint("Choose to follow the captor"),
+    conditions: [noCaptor],
+    functions: [setCaptorRoleFilled]
 });
 
 //intro page for the prisoner
@@ -201,11 +224,14 @@ let choosePrisoner = story.NewPage({
     name: "The Prisoner",
     content: "Text introducing the prisoner...",
     singleVisit: true,
-    hint: new PageHint("Choose to follow the prisoner")
+    hint: new PageHint("Choose to follow the prisoner"),
+    conditions: [noPrisoner],
+    functions: [setPrisonerRoleFilled]
 });
 
 unlocks([chooseRoles], [chooseCaptor, choosePrisoner]);
-alternativePages([chooseCaptor, choosePrisoner]);
+alternativePages([chooseCaptor, choosePrisoner], new VariableReference(
+    VariableScope.shared, "this", "RoleChosen"));
 
 
 // ********* ACT 1 - MORNING FOR THE CAPTOR / PRISONER *********
@@ -220,26 +246,24 @@ let morningPhasePrisoner = CreatePhase("MorningPhasePrisoner");
 choosePrisoner.functions.push(morningPhasePrisoner.enablePhaseFunction); //make sure its unlocked by the choose prisoner node
 
 //initial options - available throughout the morning
-let whyHereCaptor = new Page({
+let whyHereCaptor = story.NewPage({
     name: "For the Cause",
     content: "Text explaining why the captor is doing this ...",
     hint: new PageHint("there is always a reason"),
     singleVisit: true,
+    conditions: [morningPhaseCaptor.phaseEnabledCondition]
 });
 
-let whyHerePrisoner = new Page({
+let whyHerePrisoner = story.NewPage({
     name: "For the Cause",
     content: "Text explaining why the captor is doing this ...",
     hint: new PageHint("they always have a reason"),
-    singleVisit: true
+    singleVisit: true,
+    conditions: [morningPhasePrisoner.phaseEnabledCondition]
 });
 
-
-
-      					
-
 //one-off pages - alternatives that close off options for the other reader
-let offeringADrinkCaptor = new Page({
+let offeringADrinkCaptor = story.NewPage({
     name: "I offered him a drink",
     content: "Text: captor helps the prisoner to take a drink",
     hint: new PageHint("He'll pass out in this heat"),
@@ -247,7 +271,7 @@ let offeringADrinkCaptor = new Page({
 });
 AddPagesToPhase([offeringADrinkCaptor], morningPhaseCaptor);
 
-let forcingADrinkCaptor = new Page({
+let forcingADrinkCaptor = story.NewPage({
     name: "I forced him to drink",
     content: "Text: captor forced the prisoner to take a drink",
     hint: new PageHint("I can't have him die on me"),
@@ -255,7 +279,7 @@ let forcingADrinkCaptor = new Page({
 });
 AddPagesToPhase([forcingADrinkCaptor], morningPhaseCaptor);
 
-let offeringADrinkPrisoner = new Page({
+let offeringADrinkPrisoner = story.NewPage({
     name: "He offered me a drink",
     content: "Text: captor helps the prisoner to take a drink",
     hint: new PageHint("I'll pass out in this heat"),
@@ -263,7 +287,7 @@ let offeringADrinkPrisoner = new Page({
 });
 AddPagesToPhase([offeringADrinkPrisoner], morningPhasePrisoner);
 
-let forcingADrinkPrisoner = new Page({
+let forcingADrinkPrisoner = story.NewPage({
     name: "He forced me to drink",
     content: "Text: captor forced the prisoner to take a drink",
     hint: new PageHint("Is he worried that I'll die on him?"),
@@ -271,16 +295,16 @@ let forcingADrinkPrisoner = new Page({
 });
 AddPagesToPhase([forcingADrinkPrisoner], morningPhasePrisoner);
 
-locks([offeringADrinkCaptor, offeringADrinkPrisoner], 
+locks([offeringADrinkCaptor, offeringADrinkPrisoner],
 		[forcingADrinkCaptor, forcingADrinkPrisoner] );
 		
 locks([forcingADrinkCaptor, forcingADrinkPrisoner],
-		[offeringADrinkCaptor, offeringADrinkPrisoner] ); 
+		[offeringADrinkCaptor, offeringADrinkPrisoner] );
 
 
 
 //transition node - moves the story onwards to the afternoon (same for both roles)
-let moveToAfternoon = new Page({
+let moveToAfternoon = story.NewPage({
     name: "Noon",
     content: "Text explaining that time progresses to afternoon...",
     hint: new PageHint("Is it noon already?")
@@ -294,11 +318,6 @@ AddPagesToPhase([whyHereCaptor, moveToAfternoon], morningPhaseCaptor);
 
 //******** this line causes an error ******
 //AddPagesToPhase([whyHerePrisoner, moveToAfternoon], morningPhasePrisoner);
-
-//add the pages to the story
-story.pages.push(whyHereCaptor, whyHerePrisoner, moveToAfternoon);
-
-
 
 
 // ********* ACT 2 - AFTERNOON FOR THE CAPTOR / PRISONER *********
