@@ -1,5 +1,5 @@
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
-import {MapViewSettingsSchema} from "../schema/MapViewSettingsSchema";
+import {MapViewSettingsSchema} from "../schemas/core/MapViewSettingsSchema";
 
 export class MapViewSettings implements SchemaContentBuilder<MapViewSettingsSchema> {
     constructor(

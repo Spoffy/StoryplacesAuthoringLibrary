@@ -4,12 +4,12 @@ import {Location} from "./Location";
 import {StoryFunction} from "./StoryFunction";
 import {StoryCondition} from "./StoryCondition";
 import {MapViewSettings} from "./MapViewSettings";
-import {PublishState} from "../schema/PublishState";
-import {Audience} from "../schema/AudienceSchema";
+import {PublishState} from "../schemas/core/PublishState";
+import {Audience} from "../schemas/core/AudienceSchema";
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
-import {StorySchema} from "../schema/StorySchema";
-import {FunctionSchema} from "../schema/FunctionSchema";
-import {ConditionSchema} from "../schema/ConditionSchema";
+import {StorySchema} from "../schemas/core/StorySchema";
+import {FunctionSchema} from "../schemas/core/FunctionSchema";
+import {ConditionSchema} from "../schemas/core/ConditionSchema";
 import {Dependencies, EmptyDependencies, HasDependencies, MergeDependencies} from "../interfaces/Dependencies";
 
 export class Story implements SchemaContentBuilder<StorySchema> {

@@ -11,8 +11,8 @@ import {
     ConditionSchema,
     ConditionTimePassedSchema, ConditionTimeRangeSchema,
     LogicalOperand
-} from "../schema/ConditionSchema";
-import {LocationRefSchema} from "../schema/LocationSchema";
+} from "../schemas/core/ConditionSchema";
+import {LocationRefSchema} from "../schemas/core/LocationSchema";
 import {StoryFunction, StoryFunctionReferenceOrDefinition} from "./StoryFunction";
 import {EmptyDependencies, HasDependencies} from "../interfaces/Dependencies";
 

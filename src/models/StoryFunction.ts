@@ -6,9 +6,9 @@ import {
     FunctionSetRoleSchema,
     FunctionSetSchema,
     FunctionSetTimestampSchema
-} from "../schema/FunctionSchema";
+} from "../schemas/core/FunctionSchema";
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
-import {ConditionRefSchema} from "../schema/ConditionSchema";
+import {ConditionRefSchema} from "../schemas/core/ConditionSchema";
 import {HasDependencies} from "../interfaces/Dependencies";
 import {ConditionReferenceOrDefinition, IsCondition, ToConditionReference} from "./StoryCondition";
 

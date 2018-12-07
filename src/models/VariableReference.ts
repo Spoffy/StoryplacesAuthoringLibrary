@@ -1,6 +1,6 @@
-import {VariableScope} from "../schema/VariableScopes";
+import {VariableScope} from "../schemas/core/VariableScopes";
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
-import {VariableReferenceSchema} from "../schema/VariableReferenceSchema";
+import {VariableReferenceSchema} from "../schemas/core/VariableReferenceSchema";
 
 export class VariableReference implements SchemaContentBuilder<VariableReferenceSchema> {
   constructor(

@@ -1,5 +1,5 @@
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
-import {LocationCircleSchema} from "../schema/LocationSchema";
+import {LocationCircleSchema} from "../schemas/core/LocationSchema";
 
 export class LocationCircle implements SchemaContentBuilder<LocationCircleSchema> {
     constructor(

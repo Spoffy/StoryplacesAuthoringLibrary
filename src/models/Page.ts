@@ -1,7 +1,7 @@
 import {PageHint} from "./PageHint";
-import {PageTransition} from "../schema/PageTransition";
+import {PageTransition} from "../schemas/core/PageTransition";
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
-import {PageSchema} from "../schema/PageSchema";
+import {PageSchema} from "../schemas/core/PageSchema";
 import {
     IsStoryFunction, StoryFunctionReferenceOrDefinition, StoryFunctionSet,
     ToStoryFunctionReference
@@ -11,7 +11,7 @@ import {
     ToConditionReference
 } from "./StoryCondition";
 import {VariableReference} from "./VariableReference";
-import {ComparisonOperand, ComparisonType} from "../schema/ConditionSchema";
+import {ComparisonOperand, ComparisonType} from "../schemas/core/ConditionSchema";
 import {Dependencies, HasDependencies} from "../interfaces/Dependencies";
 
 

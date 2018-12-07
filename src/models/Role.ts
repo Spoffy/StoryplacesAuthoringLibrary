@@ -1,5 +1,5 @@
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
-import {RoleSchema} from "../schema/RoleSchema";
+import {RoleSchema} from "../schemas/core/RoleSchema";
 
 export class Role implements SchemaContentBuilder<RoleSchema> {
     constructor(

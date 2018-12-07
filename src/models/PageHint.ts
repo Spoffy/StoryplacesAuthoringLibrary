@@ -1,4 +1,4 @@
-import {PageHintSchema} from "../schema/PageHintSchema";
+import {PageHintSchema} from "../schemas/core/PageHintSchema";
 import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
 
 export class PageHint implements SchemaContentBuilder<PageHintSchema> {
