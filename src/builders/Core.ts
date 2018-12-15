@@ -81,7 +81,7 @@ namespace Schema.Builders {
                     conditions: func.conditionReferences,
                     functions: func.functionReferences,
                     type: "set",
-                    variable: func.variable.buildContent(),
+                    variable: this.buildVariableReference(func.variable),
                     value: func.value
                 }
             },
@@ -100,7 +100,7 @@ namespace Schema.Builders {
                     conditions: func.conditionReferences,
                     functions: func.functionReferences,
                     type: "settimestamp",
-                    variable: func.variable.buildContent()
+                    variable: this.buildVariableReference(func.variable)
                 }
             },
             [StoryFunctionIncrement.constructor.name]: (func): FunctionIncrementSchema => {
@@ -109,7 +109,7 @@ namespace Schema.Builders {
                     conditions: func.conditionReferences,
                     functions: func.functionReferences,
                     type: "increment",
-                    variable: func.variable.buildContent(),
+                    variable: this.buildVariableReference(func.variable),
                     value: func.value
                 }
             },
@@ -123,8 +123,12 @@ namespace Schema.Builders {
             }
         };
 
-        public buildVariable(variable: VariableReference): VariableReferenceSchema {
-
+        public buildVariableReference(variableReference: VariableReference): VariableReferenceSchema {
+            return {
+                scope: variableReference.scope,
+                namespace: variableReference.namespace,
+                variable: variableReference.variable
+            }
         }
 
         public deduplicateItems<ItemType extends Identifiable>(rawItems: ItemType[]): ItemType[] {
