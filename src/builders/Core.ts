@@ -21,6 +21,8 @@ import {VariableReference} from "../models/VariableReference";
 import {VariableReferenceSchema} from "../schemas/core/VariableReferenceSchema";
 import {PageSchema} from "../schemas/core/PageSchema";
 import {ToConditionReference} from "../models/StoryCondition";
+import {RoleSchema} from "../schemas/core/RoleSchema";
+import {Role} from "../models/Role";
 
 /*
 => Initial population
@@ -45,7 +47,7 @@ namespace Schema.Builders {
                 author: story.author,
                 publishState: story.publishState,
                 publishDate: story.publishDate,
-                roles: story.roles.map(role => role.buildContent()),
+                roles: story.roles.map(this.buildRole),
                 pages: story.pages.map(this.buildPage),
                 content: this.buildContentStore(story),
                 functions: dependencies.functions.map(this.buildFunction),
@@ -80,6 +82,13 @@ namespace Schema.Builders {
                 hint: page.hint.buildContent(),
                 functions: page.functions.map(ToStoryFunctionReference),
                 conditions: page.conditions.map(ToConditionReference)
+            }
+        }
+
+        public buildRole(role: Role): RoleSchema {
+            return {
+                id: role.id,
+                required: role.required
             }
         }
 
