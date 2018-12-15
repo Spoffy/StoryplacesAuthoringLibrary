@@ -1,9 +1,24 @@
 import {Story} from "../models/Story";
 import {findDependencies} from "../interfaces/Dependencies";
 import {Page} from "../models/Page";
-import {StoryFunction} from "../models/StoryFunction";
+import {
+    StoryFunction, StoryFunctionChain,
+    StoryFunctionIncrement,
+    StoryFunctionSet,
+    StoryFunctionSetRole,
+    StoryFunctionSetTimestamp
+} from "../models/StoryFunction";
 import {StorySchema} from "../schemas/core/StorySchema";
-import {FunctionSchema} from "../schemas/core/FunctionSchema";
+import {
+    FunctionChainSchema,
+    FunctionIncrementSchema,
+    FunctionSchema,
+    FunctionSetRoleSchema,
+    FunctionSetSchema,
+    FunctionSetTimestampSchema,
+} from "../schemas/core/FunctionSchema";
+import {VariableReference} from "../models/VariableReference";
+import {VariableReferenceSchema} from "../schemas/core/VariableReferenceSchema";
 
 /*
 => Initial population
@@ -20,6 +35,8 @@ namespace Schema.Builders {
     export class Core {
         public build(story: Story): StorySchema {
             let dependencies = findDependencies(story.pages);
+            dependencies.functions = this.deduplicateItems(dependencies.functions);
+            dependencies.conditions = this.deduplicateItems(dependencies.conditions);
 
             return {
                 name: story.name,
@@ -29,8 +46,8 @@ namespace Schema.Builders {
                 roles: story.roles.map(role => role.buildContent()),
                 pages: story.pages.map(page => page.buildContent()),
                 content: this.buildContentStore(story),
-                functions: this.deduplicateItems(dependencies.functions).map(this.buildFunction),
-                conditions: story.buildConditions(dependencies.conditions),
+                functions: dependencies.functions.map(this.buildFunction),
+                conditions: dependencies.conditions.map(this.buildCondition),
                 cachedMediaIds: story.cachedMediaIds,
                 locations: story.locations.map(location => location.buildContent()),
                 tags: story.tags,
@@ -53,6 +70,60 @@ namespace Schema.Builders {
         }
 
         public buildFunction(func: StoryFunction): FunctionSchema {
+            return this.functionBuilders[func.constructor.name](func);
+
+        }
+
+        protected functionBuilders = {
+            [StoryFunctionSet.constructor.name]: (func): FunctionSetSchema => {
+                return {
+                    id: func.id,
+                    conditions: func.conditionReferences,
+                    functions: func.functionReferences,
+                    type: "set",
+                    variable: func.variable.buildContent(),
+                    value: func.value
+                }
+            },
+            [StoryFunctionSetRole.constructor.name]: (func): FunctionSetRoleSchema => {
+                return {
+                    id: func.id,
+                    conditions: func.conditionReferences,
+                    functions: func.functionReferences,
+                    type: "setrole",
+                    value: func.value
+                }
+            },
+            [StoryFunctionSetTimestamp.constructor.name]: (func): FunctionSetTimestampSchema => {
+                return {
+                    id: func.id,
+                    conditions: func.conditionReferences,
+                    functions: func.functionReferences,
+                    type: "settimestamp",
+                    variable: func.variable.buildContent()
+                }
+            },
+            [StoryFunctionIncrement.constructor.name]: (func): FunctionIncrementSchema => {
+                return {
+                    id: func.id,
+                    conditions: func.conditionReferences,
+                    functions: func.functionReferences,
+                    type: "increment",
+                    variable: func.variable.buildContent(),
+                    value: func.value
+                }
+            },
+            [StoryFunctionChain.constructor.name]: (func): FunctionChainSchema => {
+                return {
+                    id: func.id,
+                    conditions: func.conditionReferences,
+                    functions: func.functionReferences,
+                    type: "chain"
+                }
+            }
+        };
+
+        public buildVariable(variable: VariableReference): VariableReferenceSchema {
 
         }
 

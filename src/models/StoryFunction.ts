@@ -12,7 +12,7 @@ import {ConditionRefSchema} from "../schemas/core/ConditionSchema";
 import {HasDependencies} from "../interfaces/Dependencies";
 import {ConditionReferenceOrDefinition, IsCondition, ToConditionReference} from "./StoryCondition";
 
-export abstract class StoryFunctionBase implements SchemaContentBuilder<FunctionSchema>, HasDependencies {
+export abstract class StoryFunctionBase implements HasDependencies {
     constructor(
         public id: string,
         public conditions: ConditionReferenceOrDefinition[] = [],
@@ -32,8 +32,6 @@ export abstract class StoryFunctionBase implements SchemaContentBuilder<Function
     get functionReferences(): FunctionRefSchema[] {
         return this.functions.map(ToStoryFunctionReference);
     }
-
-    abstract buildContent(): FunctionSchema;
 }
 
 export class StoryFunctionSet extends StoryFunctionBase {
@@ -46,18 +44,6 @@ export class StoryFunctionSet extends StoryFunctionBase {
     {
         super(id, conditions, functions);
     }
-
-
-    buildContent(): FunctionSetSchema {
-        return {
-            id: this.id,
-            conditions: this.conditionReferences,
-            functions: this.functionReferences,
-            type: "set",
-            variable: this.variable.buildContent(),
-            value: this.value
-        }
-    }
 }
 
 export class StoryFunctionSetRole extends StoryFunctionBase {
@@ -69,16 +55,6 @@ export class StoryFunctionSetRole extends StoryFunctionBase {
     {
         super(id, conditions, functions);
     }
-
-    buildContent(): FunctionSetRoleSchema {
-        return {
-            id: this.id,
-            conditions: this.conditionReferences,
-            functions: this.functionReferences,
-            type: "setrole",
-            value: this.value
-        }
-    }
 }
 
 export class StoryFunctionSetTimestamp extends StoryFunctionBase {
@@ -89,16 +65,6 @@ export class StoryFunctionSetTimestamp extends StoryFunctionBase {
         functions?: FunctionRefSchema[])
     {
         super(id, conditions, functions);
-    }
-
-    buildContent(): FunctionSetTimestampSchema {
-        return {
-            id: this.id,
-            conditions: this.conditionReferences,
-            functions: this.functionReferences,
-            type: "settimestamp",
-            variable: this.variable.buildContent()
-        }
     }
 }
 
@@ -112,17 +78,6 @@ export class StoryFunctionIncrement extends StoryFunctionBase {
     {
         super(id, conditions, functions);
     }
-
-    buildContent(): FunctionIncrementSchema {
-        return {
-            id: this.id,
-            conditions: this.conditionReferences,
-            functions: this.functionReferences,
-            type: "increment",
-            variable: this.variable.buildContent(),
-            value: this.value
-        }
-    }
 }
 
 export class StoryFunctionChain extends StoryFunctionBase {
@@ -132,16 +87,6 @@ export class StoryFunctionChain extends StoryFunctionBase {
         functions?: FunctionRefSchema[])
     {
         super(id, conditions, functions);
-    }
-
-    //Functions is non-optional here.
-    buildContent(): FunctionChainSchema {
-        return {
-            id: this.id,
-            conditions: this.conditionReferences,
-            functions: this.functionReferences,
-            type: "chain"
-        }
     }
 }
 
