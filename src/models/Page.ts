@@ -26,7 +26,7 @@ type PageCreationParameters = {
     singleVisit?: boolean
 }
 
-export class Page implements SchemaContentBuilder<PageSchema>, HasDependencies {
+export class Page implements HasDependencies {
     private static pageCounter: number = 0;
     public id: string;
     public name: string;
@@ -67,18 +67,6 @@ export class Page implements SchemaContentBuilder<PageSchema>, HasDependencies {
 
     get contentRef(): string {
         return this.id;
-    }
-
-    buildContent(): PageSchema {
-        return {
-            id: this.id,
-            name: this.name,
-            contentRef: this.contentRef,
-            pageTransition: this.pageTransition,
-            hint: this.hint.buildContent(),
-            functions: this.functions.map(ToStoryFunctionReference),
-            conditions: this.conditions.map(ToConditionReference)
-        }
     }
 
     get dependencies(): Dependencies {

@@ -6,7 +6,7 @@ import {
     StoryFunctionIncrement,
     StoryFunctionSet,
     StoryFunctionSetRole,
-    StoryFunctionSetTimestamp
+    StoryFunctionSetTimestamp, ToStoryFunctionReference
 } from "../models/StoryFunction";
 import {StorySchema} from "../schemas/core/StorySchema";
 import {
@@ -19,6 +19,8 @@ import {
 } from "../schemas/core/FunctionSchema";
 import {VariableReference} from "../models/VariableReference";
 import {VariableReferenceSchema} from "../schemas/core/VariableReferenceSchema";
+import {PageSchema} from "../schemas/core/PageSchema";
+import {ToConditionReference} from "../models/StoryCondition";
 
 /*
 => Initial population
@@ -44,7 +46,7 @@ namespace Schema.Builders {
                 publishState: story.publishState,
                 publishDate: story.publishDate,
                 roles: story.roles.map(role => role.buildContent()),
-                pages: story.pages.map(page => page.buildContent()),
+                pages: story.pages.map(this.buildPage),
                 content: this.buildContentStore(story),
                 functions: dependencies.functions.map(this.buildFunction),
                 conditions: dependencies.conditions.map(this.buildCondition),
@@ -67,6 +69,18 @@ namespace Schema.Builders {
                 contentStore[this.calculateReferenceForPageContent(page)] = page.content;
             });
             return contentStore;
+        }
+
+        public buildPage(page: Page): PageSchema {
+            return {
+                id: page.id,
+                name: page.name,
+                contentRef: page.contentRef,
+                pageTransition: page.pageTransition,
+                hint: page.hint.buildContent(),
+                functions: page.functions.map(ToStoryFunctionReference),
+                conditions: page.conditions.map(ToConditionReference)
+            }
         }
 
         public buildFunction(func: StoryFunction): FunctionSchema {
