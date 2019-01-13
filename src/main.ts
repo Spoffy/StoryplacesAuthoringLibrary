@@ -7,7 +7,7 @@ import {VariableReference} from "./models/VariableReference";
 import {VariableScope} from "./schemas/core/VariableScopes";
 import {StoryFunctionSet} from "./models/StoryFunction";
 import {Audience} from "./schemas/core/AudienceSchema";
-
+import { Core } from "./builders/Core";
 
 let story = new Story("Test Story");
 story.author = "Someone";
@@ -36,6 +36,7 @@ let page2 = new Page({
 });
 story.pages.push(page2);
 
-let content = story.buildContent();
+let builder = new Core();
+let content = builder.build(story);
 
 console.log(JSON.stringify(content, null, 2));

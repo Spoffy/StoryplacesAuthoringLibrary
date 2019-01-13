@@ -28,7 +28,7 @@ export class Story {
     public pagesMapViewSettings?: MapViewSettings;
 
 
-    private buildConditions(rawConditions: StoryCondition[]): ConditionSchema[] {
+    /*private buildConditions(rawConditions: StoryCondition[]): ConditionSchema[] {
         return rawConditions.reduce((result: StoryCondition[], condInPage: StoryCondition) => {
             let condInAccumWithSameId = result.find(resultCond => condInPage.id == resultCond.id);
             if(!condInAccumWithSameId) {
@@ -38,6 +38,6 @@ export class Story {
             }
             return result;
         }, []).map(cond => cond.buildContent());
-    }
+    }*/
 }
 
