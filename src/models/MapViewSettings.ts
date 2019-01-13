@@ -1,17 +1,6 @@
-import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
-import {MapViewSettingsSchema} from "../schemas/core/MapViewSettingsSchema";
-
-export class MapViewSettings implements SchemaContentBuilder<MapViewSettingsSchema> {
+export class MapViewSettings {
     constructor(
         public map: boolean = true,
         public pageArrows: boolean = true,
         public pageDistance: boolean = false) {}
-
-    buildContent(): MapViewSettingsSchema {
-        return {
-            map: this.map,
-            pageArrows: this.pageArrows,
-            pageDistance: this.pageDistance
-        }
-    }
 }

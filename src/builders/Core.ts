@@ -2,11 +2,13 @@ import {Story} from "../models/Story";
 import {findDependencies} from "../interfaces/Dependencies";
 import {Page} from "../models/Page";
 import {
-    StoryFunction, StoryFunctionChain,
+    StoryFunction,
+    StoryFunctionChain,
     StoryFunctionIncrement,
     StoryFunctionSet,
     StoryFunctionSetRole,
-    StoryFunctionSetTimestamp, ToStoryFunctionReference
+    StoryFunctionSetTimestamp,
+    ToStoryFunctionReference
 } from "../models/StoryFunction";
 import {StorySchema} from "../schemas/core/StorySchema";
 import {
@@ -20,9 +22,33 @@ import {
 import {VariableReference} from "../models/VariableReference";
 import {VariableReferenceSchema} from "../schemas/core/VariableReferenceSchema";
 import {PageSchema} from "../schemas/core/PageSchema";
-import {ToConditionReference} from "../models/StoryCondition";
+import {
+    StoryCondition,
+    StoryConditionCheck,
+    StoryConditionComparison,
+    StoryConditionIsRole,
+    StoryConditionLocation,
+    StoryConditionLogical,
+    StoryConditionTimePassed,
+    StoryConditionTimeRange,
+    ToConditionReference,
+} from "../models/StoryCondition";
 import {RoleSchema} from "../schemas/core/RoleSchema";
 import {Role} from "../models/Role";
+import {LocationCircleSchema, LocationSchema} from "../schemas/core/LocationSchema";
+import {Location} from "../models/Location";
+import {MapViewSettings} from "../models/MapViewSettings";
+import {MapViewSettingsSchema} from "../schemas/core/MapViewSettingsSchema";
+import {
+    ConditionCheckSchema,
+    ConditionComparisonSchema,
+    ConditionIsRoleSchema,
+    ConditionLocationSchema,
+    ConditionLogicalSchema,
+    ConditionSchema,
+    ConditionTimePassedSchema,
+    ConditionTimeRangeSchema
+} from "../schemas/core/ConditionSchema";
 
 /*
 => Initial population
@@ -53,9 +79,9 @@ namespace Schema.Builders {
                 functions: dependencies.functions.map(this.buildFunction),
                 conditions: dependencies.conditions.map(this.buildCondition),
                 cachedMediaIds: story.cachedMediaIds,
-                locations: story.locations.map(location => location.buildContent()),
+                locations: story.locations.map(this.buildLocation),
                 tags: story.tags,
-                pagesMapViewSettings: story.pagesMapViewSettings && this.pagesMapViewSettings.buildContent(),
+                pagesMapViewSettings: story.pagesMapViewSettings && this.buildMapViewSettings(story.pagesMapViewSettings),
                 schemaVersion: story.schemaVersion,
                 audience: story.audience
             }
@@ -92,9 +118,18 @@ namespace Schema.Builders {
             }
         }
 
+        public buildLocation(location: Location): LocationSchema {
+            return {
+                type: "circle",
+                id: location.id,
+                lat: location.lat,
+                lon: location.lon,
+                radius: location.radius
+            }
+        }
+
         public buildFunction(func: StoryFunction): FunctionSchema {
             return this.functionBuilders[func.constructor.name](func);
-
         }
 
         protected functionBuilders = {
@@ -146,11 +181,84 @@ namespace Schema.Builders {
             }
         };
 
+       public buildCondition(cond: StoryCondition): ConditionSchema {
+            return this.conditionBuilders[cond.constructor.name](cond);
+       }
+
+
+        protected conditionBuilders = {
+            [StoryConditionLogical.constructor.name]: (cond): ConditionLogicalSchema => {
+                return {
+                    id: cond.id,
+                    type: "logical",
+                    operand: cond.operand,
+                    conditions: cond.conditions.map(ToConditionReference)
+                }
+            },
+            [StoryConditionComparison.constructor.name]: (cond): ConditionComparisonSchema => {
+                return {
+                    id: cond.id,
+                    type: "comparison",
+                    operand: cond.operand,
+                    a: typeof cond.a == "string" ? cond.a : this.buildVariableReference(cond.a),
+                    b: typeof cond.b == "string" ? cond.b : this.buildVariableReference(cond.b),
+                    aType: cond.aType,
+                    bType: cond.bType
+                }
+            },
+            [StoryConditionCheck.constructor.name]: (cond): ConditionCheckSchema => {
+                return {
+                    id: cond.id,
+                    type: "check",
+                    variable: this.buildVariableReference(cond.variable)
+                }
+            },
+            [StoryConditionLocation.constructor.name]: (cond): ConditionLocationSchema => {
+                return {
+                    id: cond.id,
+                    type: "location",
+                    bool: cond.bool,
+                    location: cond.location
+                }
+            },
+            [StoryConditionTimePassed.constructor.name]: (cond): ConditionTimePassedSchema => {
+                return {
+                    id: cond.id,
+                    type: "timepassed",
+                    minutes: cond.minutes,
+                    variable: this.buildVariableReference(cond.variable)
+                }
+            },
+            [StoryConditionTimeRange.constructor.name]: (cond): ConditionTimeRangeSchema => {
+                return {
+                    id: cond.id,
+                    type: "timerange",
+                    first: cond.first,
+                    last: cond.last
+                }
+            },
+            [StoryConditionIsRole.constructor.name]: (cond): ConditionIsRoleSchema => {
+                return {
+                    id: cond.id,
+                    type: "isrole",
+                    role: cond.role
+                }
+            }
+        };
+
         public buildVariableReference(variableReference: VariableReference): VariableReferenceSchema {
             return {
                 scope: variableReference.scope,
                 namespace: variableReference.namespace,
                 variable: variableReference.variable
+            }
+        }
+
+        public buildMapViewSettings(mapViewSettings: MapViewSettings): MapViewSettingsSchema {
+            return {
+                map: mapViewSettings.map,
+                pageArrows: mapViewSettings.pageArrows,
+                pageDistance: mapViewSettings.pageDistance
             }
         }
 

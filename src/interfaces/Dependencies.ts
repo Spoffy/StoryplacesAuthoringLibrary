@@ -53,5 +53,5 @@ export function findDependenciesRec(currentDependencies: Dependencies, toProcess
 
     //Merge after the checks to avoid adding to the dependencies as we iterate.
     currentDependencies = MergeDependencies([currentDependencies, nextDependencies]);
-    return this.calculateDependenciesRec(currentDependencies, nextToProcess);
+    return findDependenciesRec(currentDependencies, nextToProcess);
 }
