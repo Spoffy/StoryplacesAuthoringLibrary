@@ -1,13 +1,5 @@
 import {VariableReference} from "./VariableReference";
-import {
-    FunctionChainSchema,
-    FunctionIncrementSchema, FunctionRefSchema,
-    FunctionSchema,
-    FunctionSetRoleSchema,
-    FunctionSetSchema,
-    FunctionSetTimestampSchema
-} from "../schemas/core/FunctionSchema";
-import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
+import {FunctionRefSchema} from "../schemas/core/FunctionSchema";
 import {ConditionRefSchema} from "../schemas/core/ConditionSchema";
 import {HasDependencies} from "../interfaces/Dependencies";
 import {ConditionReferenceOrDefinition, IsCondition, ToConditionReference} from "./StoryCondition";

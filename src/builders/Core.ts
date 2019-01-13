@@ -49,6 +49,8 @@ import {
     ConditionTimePassedSchema,
     ConditionTimeRangeSchema
 } from "../schemas/core/ConditionSchema";
+import {PageHint} from "../models/PageHint";
+import {PageHintSchema} from "../schemas/core/PageHintSchema";
 
 /*
 => Initial population
@@ -105,9 +107,16 @@ namespace Schema.Builders {
                 name: page.name,
                 contentRef: page.contentRef,
                 pageTransition: page.pageTransition,
-                hint: page.hint.buildContent(),
+                hint: this.buildPageHint(page.hint),
                 functions: page.functions.map(ToStoryFunctionReference),
                 conditions: page.conditions.map(ToConditionReference)
+            }
+        }
+
+        public buildPageHint(hint: PageHint): PageHintSchema {
+            return {
+                direction: hint.direction,
+                locations: hint.locations
             }
         }
 

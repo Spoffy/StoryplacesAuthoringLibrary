@@ -1,19 +1,6 @@
 import {VariableReference} from "./VariableReference";
-import {SchemaContentBuilder} from "../interfaces/SchemaContentBuilder";
-import {
-    ComparisonOperand,
-    ComparisonType,
-    ConditionCheckSchema,
-    ConditionComparisonSchema, ConditionIsRoleSchema,
-    ConditionLocationSchema,
-    ConditionLogicalSchema,
-    ConditionRefSchema,
-    ConditionSchema,
-    ConditionTimePassedSchema, ConditionTimeRangeSchema,
-    LogicalOperand
-} from "../schemas/core/ConditionSchema";
+import {ComparisonOperand, ComparisonType, ConditionRefSchema, LogicalOperand} from "../schemas/core/ConditionSchema";
 import {LocationRefSchema} from "../schemas/core/LocationSchema";
-import {StoryFunction, StoryFunctionReferenceOrDefinition} from "./StoryFunction";
 import {EmptyDependencies, HasDependencies} from "../interfaces/Dependencies";
 
 export abstract class StoryConditionBase implements HasDependencies {
