@@ -62,7 +62,7 @@ import {PageHintSchema} from "../schemas/core/PageHintSchema";
 
 interface Identifiable {id: any}
 
-export class Core {
+export class MultiplayerBuilder {
     public build(story: Story): StorySchema {
         let dependencies = findDependencies(story.pages);
         dependencies.functions = this.deduplicateItems(dependencies.functions);

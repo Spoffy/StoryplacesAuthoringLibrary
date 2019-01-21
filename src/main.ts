@@ -7,7 +7,7 @@ import {VariableReference} from "./models/VariableReference";
 import {VariableScope} from "./schemas/core/VariableScopes";
 import {StoryFunctionSet} from "./models/StoryFunction";
 import {Audience} from "./schemas/core/AudienceSchema";
-import { Core } from "./builders/Core";
+import { MultiplayerBuilder } from "./builders/Multiplayer";
 
 let story = new Story("Test Story");
 story.author = "Someone";
@@ -36,7 +36,7 @@ let page2 = new Page({
 });
 story.pages.push(page2);
 
-let builder = new Core();
+let builder = new MultiplayerBuilder();
 let content = builder.build(story);
 
 console.log(JSON.stringify(content, null, 2));
