@@ -10,7 +10,7 @@ import {
     StoryFunctionSetTimestamp,
     ToStoryFunctionReference
 } from "../models/StoryFunction";
-import {StorySchema} from "../schemas/core/StorySchema";
+import {StorySchema} from "../schemas/multiplayer/StorySchema";
 import {
     FunctionChainSchema,
     FunctionIncrementSchema,
@@ -18,10 +18,10 @@ import {
     FunctionSetRoleSchema,
     FunctionSetSchema,
     FunctionSetTimestampSchema,
-} from "../schemas/core/FunctionSchema";
+} from "../schemas/multiplayer/FunctionSchema";
 import {VariableReference} from "../models/VariableReference";
-import {VariableReferenceSchema} from "../schemas/core/VariableReferenceSchema";
-import {PageSchema} from "../schemas/core/PageSchema";
+import {VariableReferenceSchema} from "../schemas/multiplayer/VariableReferenceSchema";
+import {PageSchema} from "../schemas/multiplayer/PageSchema";
 import {
     StoryCondition,
     StoryConditionCheck,
@@ -33,12 +33,12 @@ import {
     StoryConditionTimeRange,
     ToConditionReference,
 } from "../models/StoryCondition";
-import {RoleSchema} from "../schemas/core/RoleSchema";
+import {RoleSchema} from "../schemas/multiplayer/RoleSchema";
 import {Role} from "../models/Role";
-import {LocationCircleSchema, LocationSchema} from "../schemas/core/LocationSchema";
+import {LocationCircleSchema, LocationSchema} from "../schemas/multiplayer/LocationSchema";
 import {Location} from "../models/Location";
 import {MapViewSettings} from "../models/MapViewSettings";
-import {MapViewSettingsSchema} from "../schemas/core/MapViewSettingsSchema";
+import {MapViewSettingsSchema} from "../schemas/multiplayer/MapViewSettingsSchema";
 import {
     ConditionCheckSchema,
     ConditionComparisonSchema,
@@ -48,9 +48,9 @@ import {
     ConditionSchema,
     ConditionTimePassedSchema,
     ConditionTimeRangeSchema
-} from "../schemas/core/ConditionSchema";
+} from "../schemas/multiplayer/ConditionSchema";
 import {PageHint} from "../models/PageHint";
-import {PageHintSchema} from "../schemas/core/PageHintSchema";
+import {PageHintSchema} from "../schemas/multiplayer/PageHintSchema";
 
 /*
 => Initial population

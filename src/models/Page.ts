@@ -1,9 +1,9 @@
 import {PageHint} from "./PageHint";
-import {PageTransition} from "../schemas/core/PageTransition";
+import {PageTransition} from "../schemas/multiplayer/PageTransition";
 import {IsStoryFunction, StoryFunctionReferenceOrDefinition, StoryFunctionSet} from "./StoryFunction";
 import {ConditionReferenceOrDefinition, IsCondition, StoryConditionComparison} from "./StoryCondition";
 import {VariableReference} from "./VariableReference";
-import {ComparisonOperand, ComparisonType} from "../schemas/core/ConditionSchema";
+import {ComparisonOperand, ComparisonType} from "../schemas/multiplayer/ConditionSchema";
 import {Dependencies, HasDependencies} from "../interfaces/Dependencies";
 
 

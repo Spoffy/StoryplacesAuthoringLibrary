@@ -3,9 +3,9 @@ import {Page} from "./Page";
 import {Location} from "./Location";
 import {StoryCondition} from "./StoryCondition";
 import {MapViewSettings} from "./MapViewSettings";
-import {PublishState} from "../schemas/core/PublishState";
-import {Audience} from "../schemas/core/AudienceSchema";
-import {ConditionSchema} from "../schemas/core/ConditionSchema";
+import {PublishState} from "../schemas/multiplayer/PublishState";
+import {Audience} from "../schemas/multiplayer/AudienceSchema";
+import {ConditionSchema} from "../schemas/multiplayer/ConditionSchema";
 
 type BuildFunction<ObjectType, ReturnType> =
     <ObjectType, ReturnType>(story: ObjectType) => ReturnType;

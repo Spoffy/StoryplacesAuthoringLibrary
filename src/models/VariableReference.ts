@@ -1,4 +1,4 @@
-import {VariableScope} from "../schemas/core/VariableScopes";
+import {VariableScope} from "../schemas/multiplayer/VariableScopes";
 
 export class VariableReference {
   constructor(

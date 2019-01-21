@@ -1,17 +1,17 @@
 import {Story} from "../models/Story";
 import {Role} from "../models/Role";
 import {Page} from "../models/Page";
-import {PublishState} from "../schemas/core/PublishState";
+import {PublishState} from "../schemas/multiplayer/PublishState";
 import {PageHint} from "../models/PageHint";
 import {VariableReference} from "../models/VariableReference";
-import {VariableScope} from "../schemas/core/VariableScopes";
+import {VariableScope} from "../schemas/multiplayer/VariableScopes";
 import {StoryFunction, StoryFunctionSet} from "../models/StoryFunction";
 import {
     StoryCondition, StoryConditionCheck, StoryConditionComparison, StoryConditionIsRole,
     StoryConditionLogical
 } from "../models/StoryCondition";
-import {ComparisonOperand, ComparisonType, LogicalOperand} from "../schemas/core/ConditionSchema";
-import {Audience} from "../schemas/core/AudienceSchema";
+import {ComparisonOperand, ComparisonType, LogicalOperand} from "../schemas/multiplayer/ConditionSchema";
+import {Audience} from "../schemas/multiplayer/AudienceSchema";
 
 /**
  * Extensions to base library for shorthand.

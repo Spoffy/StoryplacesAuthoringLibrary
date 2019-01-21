@@ -1,6 +1,6 @@
 import {VariableReference} from "./VariableReference";
-import {FunctionRefSchema} from "../schemas/core/FunctionSchema";
-import {ConditionRefSchema} from "../schemas/core/ConditionSchema";
+import {FunctionRefSchema} from "../schemas/multiplayer/FunctionSchema";
+import {ConditionRefSchema} from "../schemas/multiplayer/ConditionSchema";
 import {HasDependencies} from "../interfaces/Dependencies";
 import {ConditionReferenceOrDefinition, IsCondition, ToConditionReference} from "./StoryCondition";
 

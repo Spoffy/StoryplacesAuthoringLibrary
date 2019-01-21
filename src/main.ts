@@ -1,12 +1,12 @@
 import {Story} from "./models/Story";
 import {Role} from "./models/Role";
 import {Page} from "./models/Page";
-import {PublishState} from "./schemas/core/PublishState";
+import {PublishState} from "./schemas/multiplayer/PublishState";
 import {PageHint} from "./models/PageHint";
 import {VariableReference} from "./models/VariableReference";
-import {VariableScope} from "./schemas/core/VariableScopes";
+import {VariableScope} from "./schemas/multiplayer/VariableScopes";
 import {StoryFunctionSet} from "./models/StoryFunction";
-import {Audience} from "./schemas/core/AudienceSchema";
+import {Audience} from "./schemas/multiplayer/AudienceSchema";
 import { MultiplayerBuilder } from "./builders/Multiplayer";
 
 let story = new Story("Test Story");
