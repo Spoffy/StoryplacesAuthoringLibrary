@@ -12,13 +12,14 @@
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "outDir": "dist"
+    "outDir": "lib"
   },
   "exclude": [
     "node_modules",
-    "./src/ties"
+    "./src/ties",
+    "./lib"
   ],
-  "filesGlob": [
+  "include": [
     "./src/**/*.ts"
   ],
   "atom": {
