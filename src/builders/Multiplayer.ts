@@ -60,7 +60,7 @@ import {PageHintSchema} from "../schemas/multiplayer/PageHintSchema";
 => Return
 */
 
-interface Identifiable {id: any}
+export interface Identifiable {id: any}
 
 export class MultiplayerBuilder {
     public build(story: Story): StorySchema {

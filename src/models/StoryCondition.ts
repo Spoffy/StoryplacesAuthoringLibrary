@@ -1,12 +1,12 @@
 import {VariableReference} from "./VariableReference";
 import {ComparisonOperand, ComparisonType, ConditionRefSchema, LogicalOperand} from "../schemas/multiplayer/ConditionSchema";
 import {LocationRefSchema} from "../schemas/multiplayer/LocationSchema";
-import {EmptyDependencies, HasDependencies} from "../interfaces/Dependencies";
+import {Dependencies, EmptyDependencies, HasDependencies} from "../interfaces/Dependencies";
 
 export abstract class StoryConditionBase implements HasDependencies {
     constructor(public id: string) {}
 
-    get dependencies() {
+    get dependencies(): Dependencies {
         return EmptyDependencies();
     }
 }

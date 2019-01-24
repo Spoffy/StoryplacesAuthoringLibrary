@@ -1,7 +1,7 @@
 import {VariableReference} from "./VariableReference";
 import {FunctionRefSchema} from "../schemas/multiplayer/FunctionSchema";
 import {ConditionRefSchema} from "../schemas/multiplayer/ConditionSchema";
-import {HasDependencies} from "../interfaces/Dependencies";
+import {HasDependencies, Dependencies} from "../interfaces/Dependencies";
 import {ConditionReferenceOrDefinition, IsCondition, ToConditionReference} from "./StoryCondition";
 
 export abstract class StoryFunctionBase implements HasDependencies {
@@ -10,7 +10,7 @@ export abstract class StoryFunctionBase implements HasDependencies {
         public conditions: ConditionReferenceOrDefinition[] = [],
         public functions: StoryFunctionReferenceOrDefinition[] = []) {}
 
-    get dependencies() {
+    get dependencies(): Dependencies {
         return {
             conditions: this.conditions.filter(IsCondition),
             functions: this.functions.filter(IsStoryFunction)

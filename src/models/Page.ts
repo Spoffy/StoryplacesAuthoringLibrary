@@ -7,7 +7,7 @@ import {ComparisonOperand, ComparisonType} from "../schemas/multiplayer/Conditio
 import {Dependencies, HasDependencies} from "../interfaces/Dependencies";
 
 
-type PageCreationParameters = {
+export type PageCreationParameters = {
     name: string,
     content: string,
     hint: PageHint,
