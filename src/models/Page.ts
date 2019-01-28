@@ -32,7 +32,9 @@ export class Page implements HasDependencies {
     constructor({name, content, hint, functions, conditions, pageTransition, singleVisit}: PageCreationParameters) {
         Page.pageCounter += 1;
 
-        this.id = name + Page.pageCounter;        
+        let baseId = name.replace(/[^a-zA-Z0-9]/, "");
+
+        this.id = baseId + Page.pageCounter;
         this.name = name;
         this.content = content;
         this.hint = hint;
