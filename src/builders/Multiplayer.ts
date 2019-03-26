@@ -10,7 +10,7 @@ import {
     StoryFunctionSetTimestamp,
     ToStoryFunctionReference
 } from "../models/StoryFunction";
-import {StorySchema} from "../schemas/multiplayer/StorySchema";
+import {MultiplayerStorySchema} from "../schemas/multiplayer/StorySchema";
 import {
     FunctionChainSchema,
     FunctionIncrementSchema,
@@ -63,7 +63,7 @@ import {PageHintSchema} from "../schemas/multiplayer/PageHintSchema";
 export interface Identifiable {id: any}
 
 export class MultiplayerBuilder {
-    public build(story: Story): StorySchema {
+    public build(story: Story): MultiplayerStorySchema {
         let dependencies = findDependencies(story.pages);
         dependencies.functions = this.deduplicateItems(dependencies.functions);
         dependencies.conditions = this.deduplicateItems(dependencies.conditions);

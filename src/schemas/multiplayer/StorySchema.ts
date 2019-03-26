@@ -7,7 +7,7 @@ import {FunctionSchema} from "./FunctionSchema";
 import {ConditionSchema} from "./ConditionSchema";
 import {MapViewSettingsSchema} from "./MapViewSettingsSchema";
 
-export interface StorySchema {
+export interface MultiplayerStorySchema {
   name: string;
   author: string;
   publishState: PublishState;
