@@ -1,7 +1,7 @@
 import { Story } from "../models/Story";
 import { Page } from "../models/Page";
 import { StoryFunction } from "../models/StoryFunction";
-import { StorySchema } from "../schemas/multiplayer/StorySchema";
+import { MultiplayerStorySchema } from "../schemas/multiplayer/StorySchema";
 import { FunctionChainSchema, FunctionIncrementSchema, FunctionSchema, FunctionSetRoleSchema, FunctionSetSchema, FunctionSetTimestampSchema } from "../schemas/multiplayer/FunctionSchema";
 import { VariableReference } from "../models/VariableReference";
 import { VariableReferenceSchema } from "../schemas/multiplayer/VariableReferenceSchema";
@@ -20,7 +20,7 @@ export interface Identifiable {
     id: any;
 }
 export declare class MultiplayerBuilder {
-    build(story: Story): StorySchema;
+    build(story: Story): MultiplayerStorySchema;
     calculateReferenceForPageContent(page: Page): string;
     buildContentStore(story: any): {
         [index: string]: string;
