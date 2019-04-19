@@ -7,7 +7,7 @@ export declare enum LogicalOperand {
     AND = "AND",
     OR = "OR",
     NOR = "NOR",
-    NAND = "NAND",
+    NAND = "NAND"
 }
 export interface ConditionLogicalSchema extends ConditionBaseSchema {
     type: "logical";
@@ -20,12 +20,12 @@ export declare enum ComparisonOperand {
     LESS_OR_EQUAL = "<=",
     GREATER_OR_EQUAL = ">=",
     LESS = "<",
-    GREATER = ">",
+    GREATER = ">"
 }
 export declare enum ComparisonType {
     Variable = "Variable",
     Integer = "Integer",
-    String = "String",
+    String = "String"
 }
 export interface ConditionComparisonSchema extends ConditionBaseSchema {
     type: "comparison";

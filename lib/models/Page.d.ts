@@ -21,8 +21,8 @@ export declare class Page implements HasDependencies {
     functions: StoryFunctionReferenceOrDefinition[];
     conditions: ConditionReferenceOrDefinition[];
     pageTransition: PageTransition;
-    constructor({name, content, hint, functions, conditions, pageTransition, singleVisit}: PageCreationParameters);
-    private makeSingleVisit();
+    constructor({ name, content, hint, functions, conditions, pageTransition, singleVisit }: PageCreationParameters);
+    private makeSingleVisit;
     readonly contentRef: string;
     readonly dependencies: Dependencies;
 }
